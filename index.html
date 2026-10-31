@@ -85,6 +85,16 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:3px solid var(-
 .trbar{display:flex;gap:10px;align-items:center;margin-top:12px;flex-wrap:wrap}
 .trbar button{font:inherit;border:1px solid var(--line);background:var(--card);color:var(--ink);padding:8px 16px;border-radius:8px;cursor:pointer}
 #trstatus{color:var(--dim);font-size:.95rem}
+.pdfpanel{margin-top:16px}
+.pdfpanel label{display:block;font-weight:700;margin-bottom:10px}
+.pdfpanel input[type=file]{font:inherit;color:var(--ink);max-width:100%}
+.pbtn{font:inherit;font-weight:700;border:0;background:var(--acc);color:#fff;padding:10px 22px;border-radius:8px;cursor:pointer}
+.pbtn:disabled{opacity:.6;cursor:wait}
+#imgl{margin:12px 0 0;padding-left:20px;color:var(--dim)}
+.docpage{width:700px;background:#fff;color:#000;font:12pt/1.5 Arial,Helvetica,sans-serif}
+.docpage table{border-collapse:collapse;margin:8px 0}
+.docpage td,.docpage th{border:1px solid #999;padding:4px 6px}
+.docpage img{max-width:100%}
 .info{margin-top:44px;line-height:1.7;max-width:70ch}
 .info h2{font-size:1.5rem;margin:30px 0 8px;letter-spacing:-.01em}
 .info h3{font-size:1.1rem;margin:18px 0 4px}
@@ -101,6 +111,7 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:3px solid var(-
   <nav class="menu" aria-label="Main menu">
     <a href="#typing" id="m-typing" aria-current="page">Typing Test</a>
     <a href="#translation" id="m-tr">Translation</a>
+    <a href="#pdf-converter" id="m-pdf">PDF Converter</a>
   </nav>
 </header>
 
@@ -188,21 +199,95 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:3px solid var(-
     </div>
   </div>
 </main>
+<main id="pdfc" hidden>
+  <h1>PDF Converter</h1>
+  <p class="sub">Convert your files to PDF right in your browser. Your files are not uploaded to any server.</p>
+  <div class="modes" role="group" aria-label="Converter type">
+    <button type="button" data-tool="word" aria-pressed="true">Word to PDF</button>
+    <button type="button" data-tool="img" aria-pressed="false">Image to PDF</button>
+  </div>
+  <div class="trp pdfpanel" id="pw">
+    <label for="fw">Choose a Word file (.docx)</label>
+    <input type="file" id="fw" accept=".docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document">
+    <div class="trbar"><button class="pbtn" id="bw" type="button">Convert to PDF</button><span id="sw"></span></div>
+  </div>
+  <div class="trp pdfpanel" id="pi" hidden>
+    <label for="fi">Choose images (JPG, PNG, WebP)</label>
+    <input type="file" id="fi" accept="image/*" multiple>
+    <ul id="imgl"></ul>
+    <div class="trbar"><button class="pbtn" id="bi" type="button">Convert to PDF</button><button id="ci" type="button">Clear all</button><span id="si"></span></div>
+  </div>
+</main>
 <script>
 (function(){
-  var hero=document.getElementById("hero"),typ=document.getElementById("start"),tr=document.getElementById("tr");
+  function g(i){return document.getElementById(i)}
+  var loaded={};
+  function load(u){return loaded[u]||(loaded[u]=new Promise(function(ok,no){var s=document.createElement("script");s.src=u;s.onload=ok;s.onerror=function(){loaded[u]=null;no(new Error("load"))};document.head.appendChild(s)}))}
+  var U={m:"https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js",h:"https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js",j:"https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"};
+  document.querySelectorAll("[data-tool]").forEach(function(b){b.addEventListener("click",function(){
+    document.querySelectorAll("[data-tool]").forEach(function(x){x.setAttribute("aria-pressed",String(x===b))});
+    g("pw").hidden=b.dataset.tool!=="word";g("pi").hidden=b.dataset.tool!=="img";
+  })});
+  g("bw").onclick=async function(){
+    var btn=this,f=g("fw").files[0],st=g("sw"),wrap;
+    if(!f){st.textContent="Choose a .docx file first.";return}
+    if(!/\.docx$/i.test(f.name)){st.textContent="Only .docx files are supported. In Word, use Save As and pick .docx.";return}
+    st.textContent="Converting...";btn.disabled=true;
+    try{
+      await Promise.all([load(U.m),load(U.h)]);
+      var r=await mammoth.convertToHtml({arrayBuffer:await f.arrayBuffer()});
+      wrap=document.createElement("div");wrap.style.cssText="position:absolute;left:-99999px;top:0";
+      var box=document.createElement("div");box.className="docpage";box.innerHTML=r.value;
+      wrap.appendChild(box);document.body.appendChild(wrap);
+      await html2pdf().set({margin:[15,15,15,15],filename:f.name.replace(/\.docx$/i,"")+".pdf",image:{type:"jpeg",quality:.95},html2canvas:{scale:2,useCORS:true},jsPDF:{unit:"mm",format:"a4",orientation:"portrait"},pagebreak:{mode:["css","legacy"]}}).from(box).save();
+      st.textContent="Done. Your PDF has been downloaded.";
+    }catch(e){console.error(e);st.textContent="Could not convert this file. Check that it is a valid .docx and try again."}
+    if(wrap)wrap.remove();btn.disabled=false;
+  };
+  var imgs=[];
+  function list(){var ul=g("imgl");ul.innerHTML="";imgs.forEach(function(f){var li=document.createElement("li");li.textContent=f.name;ul.appendChild(li)})}
+  g("fi").onchange=function(){imgs=imgs.concat([].slice.call(this.files));this.value="";g("si").textContent="";list()};
+  g("ci").onclick=function(){imgs=[];list();g("si").textContent=""};
+  function toData(file){return new Promise(function(ok,no){
+    var u=URL.createObjectURL(file),im=new Image();
+    im.onload=function(){var k=Math.min(1,2200/Math.max(im.width,im.height)),c=document.createElement("canvas");
+      c.width=Math.round(im.width*k);c.height=Math.round(im.height*k);
+      var x=c.getContext("2d");x.fillStyle="#fff";x.fillRect(0,0,c.width,c.height);x.drawImage(im,0,0,c.width,c.height);
+      URL.revokeObjectURL(u);ok({url:c.toDataURL("image/jpeg",.9),w:c.width,h:c.height})};
+    im.onerror=function(){no(new Error("img"))};im.src=u})}
+  g("bi").onclick=async function(){
+    var btn=this,st=g("si");
+    if(!imgs.length){st.textContent="Choose at least one image first.";return}
+    st.textContent="Converting...";btn.disabled=true;
+    try{
+      await load(U.j);
+      var doc=new window.jspdf.jsPDF({unit:"mm",format:"a4"});
+      for(var i=0;i<imgs.length;i++){
+        var d=await toData(imgs[i]);if(i)doc.addPage();
+        var k=Math.min(190/d.w,277/d.h),W=d.w*k,H=d.h*k;
+        doc.addImage(d.url,"JPEG",(210-W)/2,(297-H)/2,W,H);
+      }
+      doc.save("images.pdf");st.textContent="Done. Your PDF has been downloaded.";
+    }catch(e){console.error(e);st.textContent="Could not convert these images. Please try again."}
+    btn.disabled=false;
+  };
+})();
+</script>
+<script>
+(function(){
+  var hero=document.getElementById("hero"),typ=document.getElementById("start"),tr=document.getElementById("tr"),pdf=document.getElementById("pdfc");
   var src=document.getElementById("trsrc"),out=document.getElementById("trout"),ur=document.getElementById("trur"),st=document.getElementById("trstatus");
   var title0=document.title,seq=0,tm;
   function route(v){
-    var t=(typeof v==="string"?v:location.hash)==="#translation";
-    hero.hidden=t;typ.hidden=t;tr.hidden=!t;
-    document.getElementById("m-typing").setAttribute("aria-current",t?"false":"page");
-    document.getElementById("m-tr").setAttribute("aria-current",t?"page":"false");
-    document.title=t?"Roman Urdu to English Translator | TypeNow":title0;
-    if(t){window.scrollTo(0,0);setTimeout(function(){src.focus()},50)}
+    var h=typeof v==="string"?v:location.hash,t=h==="#translation",p=h==="#pdf-converter",o=t||p;
+    hero.hidden=o;typ.hidden=o;tr.hidden=!t;pdf.hidden=!p;
+    [["m-typing",!o],["m-tr",t],["m-pdf",p]].forEach(function(x){document.getElementById(x[0]).setAttribute("aria-current",x[1]?"page":"false")});
+    document.title=t?"Roman Urdu to English Translator | TypeNow":p?"PDF Converter - Word to PDF, Image to PDF | TypeNow":title0;
+    if(o)window.scrollTo(0,0);
+    if(t)setTimeout(function(){src.focus()},50);
   }
   window.addEventListener("hashchange",route);route();
-  ["m-typing","m-tr"].forEach(function(id){
+  ["m-typing","m-tr","m-pdf"].forEach(function(id){
     var a=document.getElementById(id);
     a.addEventListener("click",function(e){
       e.preventDefault();
