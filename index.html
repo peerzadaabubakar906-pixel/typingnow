@@ -216,7 +216,7 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:3px solid var(-
     if(!text){out.textContent="";ur.textContent="";st.textContent="";return}
     st.textContent="Translating...";
     try{
-      var r=await fetch("translate.php",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({text:text})});
+      var r=await fetch("/api/translate",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({text:text})});
       var j=await r.json();
       if(id!==seq)return;
       if(!r.ok||j.error)throw new Error("fail");
