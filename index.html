@@ -85,6 +85,31 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:3px solid var(-
 .trbar{display:flex;gap:10px;align-items:center;margin-top:12px;flex-wrap:wrap}
 .trbar button{font:inherit;border:1px solid var(--line);background:var(--card);color:var(--ink);padding:8px 16px;border-radius:8px;cursor:pointer}
 #trstatus{color:var(--dim);font-size:.95rem}
+main#tr .trhead,main#voicec .trhead{text-align:center;margin-bottom:18px}
+.pills{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:0 0 24px}
+.pills button{font:inherit;color:var(--ink);background:var(--card);border:2px solid var(--line);border-radius:999px;padding:10px 20px;cursor:pointer}
+.pills button[aria-pressed="true"]{color:#fff;border-color:transparent;background:linear-gradient(135deg,#0f766e,#14b8a6)}
+.trgrid2{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+@media (max-width:760px){.trgrid2{grid-template-columns:1fr}}
+.trgrid2 label{display:block;font-weight:700;font-size:.95rem;margin-bottom:8px}
+main#tr .tbox,main#voicec .tbox{display:block;width:100%;min-height:280px;resize:vertical;font:inherit;font-size:1.08rem;line-height:1.6;color:var(--ink);background:color-mix(in srgb,var(--card) 70%,var(--bg));border:2px solid var(--line);border-radius:16px;padding:18px;outline:0;white-space:pre-wrap}
+main#tr .tbox:focus,main#voicec .tbox:focus{border-color:var(--acc)}
+.trstats{display:flex;flex-wrap:wrap;gap:26px;justify-content:center;margin:22px 0;color:var(--dim)}
+.trstats b{color:var(--ink)}
+.tract{display:flex;flex-wrap:wrap;gap:12px;justify-content:center}
+.tract button{display:inline-flex;align-items:center;gap:8px;font:inherit;font-weight:700;border:0;border-radius:999px;padding:14px 26px;cursor:pointer;background:var(--line);color:var(--ink)}
+.tract button.mainbtn{color:#fff;background:linear-gradient(135deg,#0f766e,#14b8a6)}
+.tract svg{width:20px;height:20px;flex:none}
+#trstatus,#vstatus{text-align:center;color:var(--dim);margin:14px 0 0;min-height:1.4em}
+.vctl{display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:center;margin:0 0 22px}
+.vctl label{font-weight:700}
+.vctl select{font:inherit;color:var(--ink);background:var(--card);border:2px solid var(--line);border-radius:10px;padding:10px 12px}
+.micbtn{display:inline-flex;align-items:center;gap:10px;font:inherit;font-weight:700;color:#fff;border:0;border-radius:999px;padding:14px 28px;cursor:pointer;background:linear-gradient(135deg,#0f766e,#14b8a6)}
+.micbtn svg{width:22px;height:22px}
+.micbtn[aria-pressed="true"]{background:#d62839;animation:pulse 1.4s infinite}
+.micbtn:disabled{opacity:.5;cursor:not-allowed}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(214,40,57,.5)}100%{box-shadow:0 0 0 16px rgba(214,40,57,0)}}
+@media (prefers-reduced-motion:reduce){.micbtn[aria-pressed="true"]{animation:none}}
 .pdfpanel{margin-top:16px}
 .pdfpanel label{display:block;font-weight:700;margin-bottom:10px}
 .pdfpanel input[type=file]{font:inherit;color:var(--ink);max-width:100%}
@@ -112,6 +137,7 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:3px solid var(-
     <a href="#typing" id="m-typing" aria-current="page">Typing Test</a>
     <a href="#translation" id="m-tr">Translation</a>
     <a href="#pdf-converter" id="m-pdf">PDF Converter</a>
+    <a href="#voice-to-text" id="m-voice">Voice to Text</a>
   </nav>
 </header>
 
@@ -183,21 +209,29 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:3px solid var(-
 </main>
 
 <main id="tr" hidden>
-  <h1>Roman Urdu to English Translator</h1>
-  <p class="sub">Type in Roman Urdu in the top box. The English translation appears in the box below as you type.</p>
-  <div class="trgrid">
-    <div class="trp">
-      <label for="trsrc">Roman Urdu</label>
-      <textarea id="trsrc" placeholder="Example: mera naam Ali hai aur main Sialkot mein rehta hoon" spellcheck="false" autocapitalize="off"></textarea>
-      <div class="trbar"><button id="trclear" type="button">Clear</button></div>
-    </div>
-    <div class="trp">
-      <span class="lbl">English</span>
-      <div id="trout" aria-live="polite"></div>
-      <div id="trur" dir="rtl" lang="ur"></div>
-      <div class="trbar"><button id="trcopy" type="button">Copy English</button><span id="trstatus"></span></div>
-    </div>
+  <div class="trhead">
+    <h1>Roman Urdu to English Translator</h1>
+    <p class="sub">Type in Roman Urdu on the left. The English translation appears on the right as you type.</p>
   </div>
+  <div class="pills" role="group" aria-label="Result style">
+    <button type="button" data-case="normal" aria-pressed="true">Normal text</button>
+    <button type="button" data-case="upper" aria-pressed="false">UPPERCASE</button>
+    <button type="button" data-case="lower" aria-pressed="false">lowercase</button>
+    <button type="button" data-case="title" aria-pressed="false">Capitalize Each Word</button>
+    <button type="button" data-case="sentence" aria-pressed="false">Sentence case</button>
+  </div>
+  <div class="trgrid2">
+    <div><label for="trsrc">Roman Urdu</label><textarea id="trsrc" class="tbox" placeholder="Type here, for example: mera naam Ali hai" spellcheck="false" autocapitalize="off"></textarea></div>
+    <div><label for="trout">English translation</label><textarea id="trout" class="tbox" readonly placeholder="Your translation will appear here..." aria-live="polite"></textarea></div>
+  </div>
+  <div class="trstats"><span>Characters: <b id="tcc">0</b></span><span>Words: <b id="tcw">0</b></span><span>Sentences: <b id="tcs">0</b></span></div>
+  <div class="tract">
+    <button type="button" class="mainbtn" id="trcopy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>Copy Result</button>
+    <button type="button" id="trdl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></svg>Download .txt</button>
+    <button type="button" id="trshare"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="6" cy="12" r="3"/><circle cx="18" cy="6" r="3"/><circle cx="18" cy="18" r="3"/><path d="M8.7 10.7l6.6-3.4M8.7 13.3l6.6 3.4"/></svg>Share</button>
+    <button type="button" id="trclear"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></svg>Clear</button>
+  </div>
+  <p id="trstatus" role="status"></p>
 </main>
 <main id="pdfc" hidden>
   <h1>PDF Converter</h1>
@@ -273,21 +307,105 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:3px solid var(-
   };
 })();
 </script>
+<main id="voicec" hidden>
+  <div class="trhead">
+    <h1>Voice to Text</h1>
+    <p class="sub">Click the microphone and start speaking. Your words appear as text. You can edit the text afterwards.</p>
+  </div>
+  <div class="vctl">
+    <label for="vlang">Language</label>
+    <select id="vlang">
+      <option value="en-US">English (US)</option>
+      <option value="en-GB">English (UK)</option>
+      <option value="en-IN">English (India)</option>
+      <option value="ur-PK">Urdu (Pakistan)</option>
+      <option value="hi-IN">Hindi</option>
+      <option value="ar-SA">Arabic</option>
+    </select>
+    <button type="button" class="micbtn" id="vmic" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="3" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg><span id="vmiclabel">Start speaking</span></button>
+  </div>
+  <textarea id="vtxt" class="tbox" dir="auto" placeholder="Your spoken words will appear here..." spellcheck="false"></textarea>
+  <div class="trstats"><span>Characters: <b id="vcc">0</b></span><span>Words: <b id="vcw">0</b></span><span>Sentences: <b id="vcs">0</b></span></div>
+  <div class="tract">
+    <button type="button" class="mainbtn" id="vcopy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>Copy Text</button>
+    <button type="button" id="vdl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></svg>Download .txt</button>
+    <button type="button" id="vclear"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></svg>Clear</button>
+  </div>
+  <p id="vstatus" role="status"></p>
+</main>
 <script>
 (function(){
-  var hero=document.getElementById("hero"),typ=document.getElementById("start"),tr=document.getElementById("tr"),pdf=document.getElementById("pdfc");
-  var src=document.getElementById("trsrc"),out=document.getElementById("trout"),ur=document.getElementById("trur"),st=document.getElementById("trstatus");
+  function g(i){return document.getElementById(i)}
+  var SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  var mic=g("vmic"),lab=g("vmiclabel"),box=g("vtxt"),st=g("vstatus"),lang=g("vlang");
+  var rec=null,on=false,committed="",ft;
+  function flash(m,keep){st.textContent=m;clearTimeout(ft);if(m&&!keep)ft=setTimeout(function(){st.textContent=""},3000)}
+  function counts(){
+    var t=box.value,tt=t.trim();
+    g("vcc").textContent=t.length;
+    g("vcw").textContent=tt?tt.split(/\s+/).length:0;
+    g("vcs").textContent=(t.match(/[^.!?\u06D4]+[.!?\u06D4]*/g)||[]).filter(function(x){return x.trim()}).length;
+  }
+  function ui(){mic.setAttribute("aria-pressed",String(on));lab.textContent=on?"Stop":"Start speaking"}
+  if(!SR){mic.disabled=true;flash("Voice typing is not supported in this browser. Please use Chrome, Edge or Safari.",true)}
+  function start(){
+    if(!SR)return;
+    rec=new SR();rec.lang=lang.value;rec.continuous=true;rec.interimResults=true;
+    committed=box.value;
+    rec.onresult=function(e){
+      var interim="";
+      for(var i=e.resultIndex;i<e.results.length;i++){
+        var t=e.results[i][0].transcript;
+        if(e.results[i].isFinal)committed+=(committed&&!/\s$/.test(committed)?" ":"")+t.trim();
+        else interim+=t;
+      }
+      box.value=committed+(interim?(committed?" ":"")+interim:"");
+      box.scrollTop=box.scrollHeight;counts();
+    };
+    rec.onerror=function(e){
+      var m={"not-allowed":"Microphone access is blocked. Allow the microphone for this site in your browser and try again.","service-not-allowed":"Microphone access is blocked. Allow the microphone for this site in your browser and try again.","audio-capture":"No microphone was found.","network":"Network error. Voice typing needs an internet connection.","language-not-supported":"This language is not supported by your browser."};
+      if(m[e.error]){on=false;ui();flash(m[e.error],true)}
+      else if(e.error==="no-speech")flash("No speech heard. Keep speaking or press Stop.");
+    };
+    rec.onend=function(){
+      if(on){try{rec.start()}catch(_){on=false;ui()}}
+      else ui();
+    };
+    try{rec.start();on=true;ui();flash("Listening... speak now.",true)}catch(_){flash("Could not start the microphone. Please try again.")}
+  }
+  function stop(){on=false;if(rec){try{rec.stop()}catch(_){}}ui();flash("")}
+  mic.onclick=function(){on?stop():start()};
+  lang.onchange=function(){if(on){stop();setTimeout(start,400)}};
+  box.addEventListener("input",function(){committed=box.value;counts()});
+  g("vcopy").onclick=function(){
+    if(!box.value){flash("Nothing to copy yet.");return}
+    navigator.clipboard.writeText(box.value).then(function(){flash("Copied!")},function(){flash("Could not copy. Select the text and copy it manually.")});
+  };
+  g("vdl").onclick=function(){
+    if(!box.value){flash("Nothing to download yet.");return}
+    var a=document.createElement("a");
+    a.href=URL.createObjectURL(new Blob([box.value],{type:"text/plain;charset=utf-8"}));
+    a.download="voice-text.txt";document.body.appendChild(a);a.click();a.remove();
+    setTimeout(function(){URL.revokeObjectURL(a.href)},1000);
+  };
+  g("vclear").onclick=function(){committed="";box.value="";counts();flash("")};
+})();
+</script>
+<script>
+(function(){
+  var hero=document.getElementById("hero"),typ=document.getElementById("start"),tr=document.getElementById("tr"),pdf=document.getElementById("pdfc"),vo=document.getElementById("voicec");
+  var src=document.getElementById("trsrc"),out=document.getElementById("trout"),st=document.getElementById("trstatus"),cc=document.getElementById("tcc"),cw=document.getElementById("tcw"),cs=document.getElementById("tcs");
   var title0=document.title,seq=0,tm;
   function route(v){
-    var h=typeof v==="string"?v:location.hash,t=h==="#translation",p=h==="#pdf-converter",o=t||p;
-    hero.hidden=o;typ.hidden=o;tr.hidden=!t;pdf.hidden=!p;
-    [["m-typing",!o],["m-tr",t],["m-pdf",p]].forEach(function(x){document.getElementById(x[0]).setAttribute("aria-current",x[1]?"page":"false")});
-    document.title=t?"Roman Urdu to English Translator | TypeNow":p?"PDF Converter - Word to PDF, Image to PDF | TypeNow":title0;
+    var h=typeof v==="string"?v:location.hash,t=h==="#translation",p=h==="#pdf-converter",v2=h==="#voice-to-text",o=t||p||v2;
+    hero.hidden=o;typ.hidden=o;tr.hidden=!t;pdf.hidden=!p;vo.hidden=!v2;
+    [["m-typing",!o],["m-tr",t],["m-pdf",p],["m-voice",v2]].forEach(function(x){document.getElementById(x[0]).setAttribute("aria-current",x[1]?"page":"false")});
+    document.title=t?"Roman Urdu to English Translator | TypeNow":p?"PDF Converter - Word to PDF, Image to PDF | TypeNow":v2?"Voice to Text - Free Speech to Text | TypeNow":title0;
     if(o)window.scrollTo(0,0);
     if(t)setTimeout(function(){src.focus()},50);
   }
   window.addEventListener("hashchange",route);route();
-  ["m-typing","m-tr","m-pdf"].forEach(function(id){
+  ["m-typing","m-tr","m-pdf","m-voice"].forEach(function(id){
     var a=document.getElementById(id);
     a.addEventListener("click",function(e){
       e.preventDefault();
@@ -296,26 +414,62 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:3px solid var(-
       try{history.replaceState(null,"",h)}catch(_){}
     });
   });
+  var raw="",mode="normal";
+  function fmt(t){
+    if(mode==="upper")return t.toUpperCase();
+    if(mode==="lower")return t.toLowerCase();
+    if(mode==="title")return t.toLowerCase().replace(/(^|\s)(\S)/g,function(m,x,y){return x+y.toUpperCase()});
+    if(mode==="sentence")return t.toLowerCase().replace(/(^\s*|[.!?]\s+)(\S)/g,function(m,x,y){return x+y.toUpperCase()});
+    return t;
+  }
+  function show(){out.value=fmt(raw)}
+  function counts(){
+    var t=src.value,tt=t.trim();
+    cc.textContent=t.length;
+    cw.textContent=tt?tt.split(/\s+/).length:0;
+    cs.textContent=(t.match(/[^.!?]+[.!?]*/g)||[]).filter(function(x){return x.trim()}).length;
+  }
+  function flash(m){st.textContent=m;clearTimeout(flash.t);if(m&&!/not available/.test(m))flash.t=setTimeout(function(){st.textContent=""},2500)}
   async function run(){
     var text=src.value.replace(/\s+/g," ").trim(),id=++seq;
-    if(!text){out.textContent="";ur.textContent="";st.textContent="";return}
-    st.textContent="Translating...";
+    if(!text){raw="";show();flash("");return}
+    flash("Translating...");
     try{
       var r=await fetch("/api/translate",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({text:text})});
       var j=await r.json();
       if(id!==seq)return;
       if(!r.ok||j.error)throw new Error("fail");
-      out.textContent=j.translation;st.textContent="";
+      raw=j.translation;show();flash("");
     }catch(e){
       console.error("Translation failed:",e);
-      if(id===seq)st.textContent="Translation is not available right now. Please try again in a moment.";
+      if(id===seq)flash("Translation is not available right now. Please try again in a moment.");
     }
   }
-  src.addEventListener("input",function(){clearTimeout(tm);tm=setTimeout(run,700)});
-  document.getElementById("trclear").onclick=function(){src.value="";run();src.focus()};
-  document.getElementById("trcopy").onclick=function(){
-    if(!out.textContent)return;
-    navigator.clipboard.writeText(out.textContent).then(function(){st.textContent="Copied"},function(){st.textContent="Could not copy"});
+  src.addEventListener("input",function(){counts();clearTimeout(tm);tm=setTimeout(run,700)});
+  document.querySelectorAll("[data-case]").forEach(function(b){b.addEventListener("click",function(){
+    mode=b.dataset.case;
+    document.querySelectorAll("[data-case]").forEach(function(x){x.setAttribute("aria-pressed",String(x===b))});
+    show();
+  })});
+  function copyText(t,ok){
+    if(!t){flash("Nothing to copy yet.");return}
+    navigator.clipboard.writeText(t).then(function(){flash(ok)},function(){flash("Could not copy. Select the text and copy it manually.")});
+  }
+  document.getElementById("trcopy").onclick=function(){copyText(out.value,"Copied!")};
+  document.getElementById("trdl").onclick=function(){
+    if(!out.value){flash("Nothing to download yet.");return}
+    var a=document.createElement("a");
+    a.href=URL.createObjectURL(new Blob([out.value],{type:"text/plain;charset=utf-8"}));
+    a.download="translation.txt";document.body.appendChild(a);a.click();a.remove();
+    setTimeout(function(){URL.revokeObjectURL(a.href)},1000);
+  };
+  document.getElementById("trshare").onclick=function(){
+    if(!out.value){flash("Nothing to share yet.");return}
+    if(navigator.share){navigator.share({text:out.value}).catch(function(){})}
+    else copyText(out.value,"Sharing is not supported here. Copied to clipboard instead.");
+  };
+  document.getElementById("trclear").onclick=function(){
+    src.value="";raw="";show();counts();flash("");seq++;src.focus();
   };
 })();
 </script>
