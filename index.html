@@ -31,7 +31,7 @@ body{margin:0;background:var(--bg);color:var(--ink);font-family:"Atkinson Hyperl
 .logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:1.35rem;letter-spacing:-.01em;color:var(--ink);text-decoration:none}
 .logo svg{width:38px;height:38px}
 .nav a.go{font-size:.98rem;color:var(--acc);text-decoration:none;font-weight:700}
-.hero{position:relative;max-width:1080px;margin:0 auto 34px;aspect-ratio:16/7;min-height:260px;border-radius:18px;overflow:hidden;background:#0b1320}
+.hero{position:relative;width:calc(100% - 40px);max-width:1040px;margin:0 auto 34px;aspect-ratio:16/7;min-height:260px;border-radius:18px;overflow:hidden;background:#0b1320}
 .slide{position:absolute;inset:0;opacity:0;transition:opacity .8s;pointer-events:none}
 .slide.on{opacity:1;pointer-events:auto}
 .slide video,.slide img{width:100%;height:100%;object-fit:cover;display:block}
@@ -46,7 +46,7 @@ body{margin:0;background:var(--bg);color:var(--ink);font-family:"Atkinson Hyperl
 .dots{position:absolute;z-index:3;left:50%;bottom:14px;transform:translateX(-50%);display:flex;gap:8px}
 .dots button{width:10px;height:10px;border-radius:50%;border:0;padding:0;background:rgba(255,255,255,.45);cursor:pointer}
 .dots button[aria-current="true"]{background:#fff;width:26px;border-radius:6px}
-main{max-width:860px;margin:0 auto;padding:0 20px 60px}
+main{max-width:1080px;margin:0 auto;padding:0 20px 60px}
 h1{font-size:clamp(1.8rem,5vw,2.6rem);margin:0 0 8px;letter-spacing:-.02em;line-height:1.1}
 p.sub{margin:0 0 24px;color:var(--dim);font-size:1.08rem}
 .bar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;margin-bottom:14px}
@@ -70,11 +70,26 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:3px solid var(-
 #res .row div{font-size:1.1rem}
 #res .row b{display:block;font-size:1.8rem}
 .again{background:var(--acc);border-color:var(--acc);color:#fff;font-weight:700;padding:11px 26px}
+[hidden]{display:none!important}
+.menu{display:flex;gap:6px;flex-wrap:wrap}
+.menu a{padding:8px 14px;border-radius:8px;color:var(--ink);text-decoration:none;font-weight:700}
+.menu a:hover{background:var(--line)}
+.menu a[aria-current="page"]{background:var(--acc);color:#fff}
+.trgrid{display:grid;grid-template-columns:1fr;gap:16px}
+@media (max-width:700px){.trgrid{grid-template-columns:1fr}}
+.trp{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px}
+.trp label,.trp .lbl{display:block;font-weight:700;margin-bottom:8px}
+#trsrc{width:100%;min-height:150px;resize:vertical;font:inherit;font-size:1.1rem;line-height:1.6;background:transparent;color:var(--ink);border:0;outline:0}
+#trout{min-height:150px;font-size:1.1rem;line-height:1.6;white-space:pre-wrap;word-break:break-word}
+#trur{margin-top:10px;color:var(--dim);font-size:1.15rem}
+.trbar{display:flex;gap:10px;align-items:center;margin-top:12px;flex-wrap:wrap}
+.trbar button{font:inherit;border:1px solid var(--line);background:var(--card);color:var(--ink);padding:8px 16px;border-radius:8px;cursor:pointer}
+#trstatus{color:var(--dim);font-size:.95rem}
 .info{margin-top:44px;line-height:1.7;max-width:70ch}
 .info h2{font-size:1.5rem;margin:30px 0 8px;letter-spacing:-.01em}
 .info h3{font-size:1.1rem;margin:18px 0 4px}
 .info p,.info li{color:var(--ink)}
-.foot{max-width:860px;margin:0 auto;padding:0 20px 30px;color:var(--dim);font-size:.9rem}
+.foot{max-width:1080px;margin:0 auto;padding:0 20px 30px;color:var(--dim);font-size:.9rem}
 </style>
 </head>
 <body>
@@ -83,7 +98,10 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:3px solid var(-
     <svg viewBox="0 0 48 48" aria-hidden="true"><rect x="3" y="3" width="42" height="42" rx="11" fill="#0f766e"/><rect x="9" y="9" width="30" height="30" rx="8" fill="#14b8a6"/><path d="M17 18h14M24 18v14" stroke="#fff" stroke-width="4.5" stroke-linecap="round"/></svg>
     TypeNow
   </a>
-  <a class="go" href="#start">Start typing</a>
+  <nav class="menu" aria-label="Main menu">
+    <a href="#typing" id="m-typing" aria-current="page">Typing Test</a>
+    <a href="#translation" id="m-tr">Translation</a>
+  </nav>
 </header>
 
 <section class="hero" id="hero" aria-label="Featured">
@@ -152,6 +170,70 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:3px solid var(-
     <p>Yes. It is free and needs no sign-up.</p>
   </section>
 </main>
+
+<main id="tr" hidden>
+  <h1>Roman Urdu to English Translator</h1>
+  <p class="sub">Type in Roman Urdu in the top box. The English translation appears in the box below as you type.</p>
+  <div class="trgrid">
+    <div class="trp">
+      <label for="trsrc">Roman Urdu</label>
+      <textarea id="trsrc" placeholder="Example: mera naam Ali hai aur main Sialkot mein rehta hoon" spellcheck="false" autocapitalize="off"></textarea>
+      <div class="trbar"><button id="trclear" type="button">Clear</button></div>
+    </div>
+    <div class="trp">
+      <span class="lbl">English</span>
+      <div id="trout" aria-live="polite"></div>
+      <div id="trur" dir="rtl" lang="ur"></div>
+      <div class="trbar"><button id="trcopy" type="button">Copy English</button><span id="trstatus"></span></div>
+    </div>
+  </div>
+</main>
+<script>
+(function(){
+  var hero=document.getElementById("hero"),typ=document.getElementById("start"),tr=document.getElementById("tr");
+  var src=document.getElementById("trsrc"),out=document.getElementById("trout"),ur=document.getElementById("trur"),st=document.getElementById("trstatus");
+  var title0=document.title,seq=0,tm;
+  function route(v){
+    var t=(typeof v==="string"?v:location.hash)==="#translation";
+    hero.hidden=t;typ.hidden=t;tr.hidden=!t;
+    document.getElementById("m-typing").setAttribute("aria-current",t?"false":"page");
+    document.getElementById("m-tr").setAttribute("aria-current",t?"page":"false");
+    document.title=t?"Roman Urdu to English Translator | TypeNow":title0;
+    if(t){window.scrollTo(0,0);setTimeout(function(){src.focus()},50)}
+  }
+  window.addEventListener("hashchange",route);route();
+  ["m-typing","m-tr"].forEach(function(id){
+    var a=document.getElementById(id);
+    a.addEventListener("click",function(e){
+      e.preventDefault();
+      var h=a.getAttribute("href");
+      route(h);
+      try{history.replaceState(null,"",h)}catch(_){}
+    });
+  });
+  async function run(){
+    var text=src.value.replace(/\s+/g," ").trim(),id=++seq;
+    if(!text){out.textContent="";ur.textContent="";st.textContent="";return}
+    st.textContent="Translating...";
+    try{
+      var r=await fetch("translate.php",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({text:text})});
+      var j=await r.json();
+      if(id!==seq)return;
+      if(!r.ok||j.error)throw new Error("fail");
+      out.textContent=j.translation;st.textContent="";
+    }catch(e){
+      console.error("Translation failed:",e);
+      if(id===seq)st.textContent="Translation is not available right now. Please try again in a moment.";
+    }
+  }
+  src.addEventListener("input",function(){clearTimeout(tm);tm=setTimeout(run,700)});
+  document.getElementById("trclear").onclick=function(){src.value="";run();src.focus()};
+  document.getElementById("trcopy").onclick=function(){
+    if(!out.textContent)return;
+    navigator.clipboard.writeText(out.textContent).then(function(){st.textContent="Copied"},function(){st.textContent="Could not copy"});
+  };
+})();
+</script>
 <footer class="foot">&copy; TypeNow. Free typing test.</footer>
 
 <script>
