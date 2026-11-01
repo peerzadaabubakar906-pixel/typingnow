@@ -64,7 +64,11 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:3px solid var(-
 @media (prefers-reduced-motion:reduce){#text span.cur{animation:none}.slide{transition:none}html{scroll-behavior:auto}}
 #inp{position:absolute;opacity:0;inset:0;width:100%;height:100%;border:0;cursor:text}
 .hint{margin-top:12px;color:var(--dim);font-size:.95rem}
-#res{display:none;text-align:center;padding:10px 0}
+#res{margin-top:22px;text-align:center;padding:24px 20px;background:var(--card);border:1px solid var(--line);border-radius:14px;animation:resIn .5s cubic-bezier(.2,.8,.2,1)}
+#res h2{margin:0 0 14px;font-size:1.1rem;color:var(--dim)}
+#res h2 small{font-weight:400;font-size:.9rem}
+#text{transition:opacity .3s}
+@keyframes resIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
 #res .big{font-size:clamp(3rem,12vw,5rem);font-weight:700;color:var(--acc);line-height:1}
 #res .row{display:flex;justify-content:center;gap:32px;margin:18px 0 22px;flex-wrap:wrap}
 #res .row div{font-size:1.1rem}
@@ -84,8 +88,8 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:3px solid var(-
 .menu .ind{position:absolute;top:5px;bottom:5px;left:0;width:0;border-radius:999px;background:linear-gradient(135deg,#0f766e,#14b8a6);box-shadow:0 6px 16px rgba(20,184,166,.40);opacity:0;pointer-events:none}
 .menu.has-ind .ind{opacity:1}
 .menu.ready .ind{transition:transform .45s cubic-bezier(.3,1.25,.4,1),width .45s cubic-bezier(.3,1.25,.4,1)}
-.menu a{position:relative;z-index:1;display:inline-flex;align-items:center;gap:7px;padding:9px 16px;border-radius:999px;color:var(--ink);text-decoration:none;font-weight:700;white-space:nowrap;transition:color .25s,transform .25s,background .25s;animation:linkIn .55s cubic-bezier(.2,.8,.2,1) both}
-.menu a:nth-of-type(1){animation-delay:.15s}.menu a:nth-of-type(2){animation-delay:.22s}.menu a:nth-of-type(3){animation-delay:.29s}.menu a:nth-of-type(4){animation-delay:.36s}.menu a:nth-of-type(5){animation-delay:.43s}
+.menu a{position:relative;z-index:1;display:inline-flex;align-items:center;gap:5px;padding:9px 11px;border-radius:999px;font-size:.95rem;color:var(--ink);text-decoration:none;font-weight:700;white-space:nowrap;transition:color .25s,transform .25s,background .25s;animation:linkIn .55s cubic-bezier(.2,.8,.2,1) both}
+.menu a:nth-of-type(1){animation-delay:.15s}.menu a:nth-of-type(2){animation-delay:.22s}.menu a:nth-of-type(3){animation-delay:.29s}.menu a:nth-of-type(4){animation-delay:.36s}.menu a:nth-of-type(5){animation-delay:.43s}.menu a:nth-of-type(6){animation-delay:.5s}.menu a:nth-of-type(7){animation-delay:.57s}.menu a:nth-of-type(8){animation-delay:.64s}
 .menu a svg{width:18px;height:18px;flex:none;transition:transform .35s cubic-bezier(.3,1.7,.5,1)}
 .menu a:hover{color:var(--acc);transform:translateY(-2px)}
 .menu a:hover svg{transform:scale(1.2) rotate(-8deg)}
@@ -143,7 +147,26 @@ main#tr .tbox:focus,main#voicec .tbox:focus{border-color:var(--acc)}
 .info h2{font-size:1.5rem;margin:30px 0 8px;letter-spacing:-.01em}
 .info h3{font-size:1.1rem;margin:18px 0 4px}
 .info p,.info li{color:var(--ink)}
-.foot{max-width:1080px;margin:0 auto;padding:0 20px 30px;color:var(--dim);font-size:.9rem}
+.foot{position:relative;margin-top:50px;background:var(--card);border-top:1px solid var(--line);color:var(--dim);font-size:.95rem}
+.foot::before{content:"";position:absolute;left:0;right:0;top:-1px;height:3px;background:linear-gradient(90deg,#0f766e,#14b8a6,#5eead4,#14b8a6,#0f766e);background-size:200% 100%;animation:footFlow 6s linear infinite}
+@keyframes footFlow{to{background-position:200% 0}}
+.foot-in{max-width:1080px;margin:0 auto;padding:38px 20px 26px;display:grid;grid-template-columns:1.5fr 1fr 1.3fr;gap:32px}
+.foot-brand .logo{font-size:1.25rem;margin-bottom:10px}
+.foot-brand p{margin:0;line-height:1.6;max-width:34ch}
+.foot h3{margin:0 0 12px;font-size:.8rem;letter-spacing:.09em;text-transform:uppercase;color:var(--ink)}
+.foot-col{display:flex;flex-direction:column;align-items:flex-start;gap:8px}
+.foot-col p{margin:0;line-height:1.6}
+.foot-col a{position:relative;color:var(--dim);text-decoration:none;font-weight:700;transition:color .25s,transform .25s}
+.foot-col a::after{content:"";position:absolute;left:0;bottom:-2px;height:2px;width:100%;background:var(--acc);transform:scaleX(0);transform-origin:left;transition:transform .3s}
+.foot-col a:hover{color:var(--acc);transform:translateX(3px)}
+.foot-col a:hover::after{transform:scaleX(1)}
+.foot-bar{max-width:1080px;margin:0 auto;padding:16px 20px calc(20px + env(safe-area-inset-bottom,0px));border-top:1px solid var(--line);display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;justify-content:space-between;font-size:.9rem}
+.foot-bar .heart{display:inline-block;color:#e11d48;animation:beat 1.4s ease-in-out infinite}
+@keyframes beat{0%,100%{transform:scale(1)}15%{transform:scale(1.25)}30%{transform:scale(1)}45%{transform:scale(1.2)}}
+#totop{display:inline-flex;align-items:center;gap:6px;font:inherit;font-weight:700;color:var(--acc);background:transparent;border:1px solid var(--line);border-radius:999px;padding:7px 16px;cursor:pointer;transition:transform .25s,background .25s,color .25s,border-color .25s}
+#totop:hover{background:var(--acc);border-color:var(--acc);color:#fff;transform:translateY(-3px)}
+@media (max-width:760px){.foot-in{grid-template-columns:1fr;gap:26px}.foot-bar{justify-content:center;text-align:center}}
+@media (prefers-reduced-motion:reduce){.foot::before,.foot-bar .heart{animation:none}.foot-col a,#totop{transition:none}}
 .ctabs{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:0 0 18px}
 .ctabs button{font:inherit;border:1px solid var(--line);background:var(--card);color:var(--ink);padding:9px 20px;border-radius:8px;cursor:pointer}
 .ctabs button[aria-pressed="true"]{background:var(--acc);border-color:var(--acc);color:#fff}
@@ -159,6 +182,52 @@ main#tr .tbox:focus,main#voicec .tbox:focus{border-color:var(--acc)}
 .cres .sz{color:var(--dim)}
 .cres .sv{color:var(--acc);font-weight:700}
 .cres a.pbtn{text-decoration:none;padding:7px 16px}
+.menu{margin-left:auto}
+.qrgrid{display:grid;grid-template-columns:1fr 360px;gap:20px;align-items:start}
+@media (max-width:820px){.qrgrid{grid-template-columns:1fr}}
+.qf label{display:block;font-weight:700;margin:14px 0 6px}
+.qf>label:first-child{margin-top:0}
+.qin{display:block;width:100%;font:inherit;color:var(--ink);background:var(--bg);border:2px solid var(--line);border-radius:10px;padding:10px 12px;outline:0;transition:border-color .2s}
+.qin:focus{border-color:var(--acc)}
+textarea.qin{resize:vertical;min-height:96px}
+.qopts{display:grid;grid-template-columns:1fr 1fr;gap:0 14px;margin-top:6px;padding-top:6px;border-top:1px dashed var(--line)}
+.qopts input[type=color]{height:42px;padding:3px;cursor:pointer}
+.qchk{display:flex!important;align-items:center;gap:8px;font-weight:400!important}
+.qprev{text-align:center;position:sticky;top:90px}
+.qempty{display:flex;align-items:center;justify-content:center;min-height:240px;border:2px dashed var(--line);border-radius:12px;color:var(--dim);padding:16px}
+#qcv{max-width:100%;height:auto;border-radius:10px;border:1px solid var(--line);animation:resIn .4s cubic-bezier(.2,.8,.2,1)}
+#qgs,#qsst{min-height:1.4em;margin:12px 0 0;color:var(--dim);font-size:.95rem}
+.qprev .tract{margin-top:12px}
+.qprev .tract button{padding:10px 18px}
+.qcam{position:relative;margin-top:14px;border-radius:14px;overflow:hidden;background:#000;max-width:520px}
+.qcam video{display:block;width:100%;max-height:380px;object-fit:cover}
+.qcam::after{content:"";position:absolute;left:12%;right:12%;height:3px;border-radius:3px;background:linear-gradient(90deg,transparent,#14b8a6,transparent);box-shadow:0 0 14px #14b8a6;animation:qscan 2.2s ease-in-out infinite alternate}
+@keyframes qscan{from{top:14%}to{top:86%}}
+.qres{margin-top:16px;padding:16px;border:1px solid var(--line);border-radius:12px;background:var(--bg);animation:resIn .4s cubic-bezier(.2,.8,.2,1)}
+.qres h2{margin:0 0 8px;font-size:1.05rem}
+.qres pre{margin:0 0 12px;white-space:pre-wrap;word-break:break-word;font:inherit;font-size:1.05rem;line-height:1.6;max-height:240px;overflow:auto}
+.qres .tract{justify-content:flex-start}
+.qres a.pbtn{text-decoration:none;display:inline-flex;align-items:center;padding:12px 24px;border-radius:999px}
+@media (prefers-reduced-motion:reduce){.qcam::after,#qcv,.qres{animation:none}}
+.topbar .nav{max-width:1280px}
+@media (max-width:1330px){.topbar .nav{justify-content:center}.menu{margin-left:0}}
+@media (max-width:1100px){.menu{max-width:100%;overflow-x:auto;scrollbar-width:none}.menu::-webkit-scrollbar{display:none}}
+.qopts-2{display:grid;grid-template-columns:1fr 1fr;gap:0 14px}
+.qopts-4{display:grid;grid-template-columns:repeat(4,1fr);gap:0 12px}
+@media (max-width:560px){.qopts-2{grid-template-columns:1fr}.qopts-4{grid-template-columns:1fr 1fr}}
+.agres{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;margin-top:18px}
+.acard{background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:14px 10px;text-align:center;animation:resIn .4s cubic-bezier(.2,.8,.2,1)}
+.acard b{display:block;font-size:1.9rem;line-height:1.1;color:var(--acc)}
+.acard span{color:var(--dim);font-size:.9rem}
+.acard.sm b{font-size:1.25rem;color:var(--ink)}
+.abig{margin-top:18px;padding:18px;border-radius:12px;border:1px solid var(--line);background:var(--bg);text-align:center;font-size:clamp(1.2rem,3.6vw,1.8rem);font-weight:700;color:var(--acc);animation:resIn .4s cubic-bezier(.2,.8,.2,1)}
+.abig small{display:block;margin-top:6px;font-size:.95rem;font-weight:400;color:var(--dim)}
+.anote{color:var(--dim);margin:14px 0 0;line-height:1.6}
+#casec .pills button{transition:transform .2s,border-color .2s,color .2s}
+#casec .pills button:hover{transform:translateY(-2px);border-color:var(--acc);color:var(--acc)}
+#cvtxt{min-height:240px;font-size:1.08rem;line-height:1.6;border-radius:16px;padding:18px;white-space:pre-wrap}
+#cvst{text-align:center;color:var(--dim);margin:14px 0 0;min-height:1.4em}
+@media (prefers-reduced-motion:reduce){.acard,.abig{animation:none}}
 </style>
 </head>
 <body>
@@ -172,7 +241,10 @@ main#tr .tbox:focus,main#voicec .tbox:focus{border-color:var(--acc)}
     <a href="#translation" id="m-tr"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 8h8M9 4v4M7 8c0 3 3 6 6 7M11 8c0 3-3 6-6 7"/><path d="M14 20l4-9 4 9M15.5 17h5"/></svg>Translation</a>
     <a href="#pdf-converter" id="m-pdf"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/></svg>PDF Converter</a>
     <a href="#voice-to-text" id="m-voice"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="3" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>Voice to Text</a>
-    <a href="#compress" id="m-comp"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 14h6v6M20 10h-6V4M14 10l7-7M3 21l7-7"/></svg>Compress PDF &amp; Image</a>
+    <a href="#compress" id="m-comp" title="Compress PDF &amp; Image"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 14h6v6M20 10h-6V4M14 10l7-7M3 21l7-7"/></svg>Compress</a>
+    <a href="#qr-code" id="m-qr"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3M21 14v.01M14 21h3M21 17v4h-3"/></svg>QR Code</a>
+    <a href="#age-calculator" id="m-age" title="Age Calculator / Date Calculator"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>Age &amp; Date</a>
+    <a href="#case-converter" id="m-case"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 18l5-12 5 12M5 14h6M15 18v-7a3 3 0 0 1 6 0v7M15 14h6"/></svg>Case Converter</a>
   </nav>
 </div></header>
 
@@ -209,38 +281,22 @@ main#tr .tbox:focus,main#voicec .tbox:focus{border-color:var(--acc)}
 
   <div class="box" id="box">
     <div id="text"></div>
-    <div id="res">
-      <div class="big" id="rw">0</div>
-      <div>words per minute</div>
-      <div class="row">
-        <div><b id="ra">0%</b>accuracy</div>
-        <div><b id="rc">0</b>correct characters</div>
-        <div><b id="re">0</b>mistakes</div>
-      </div>
-      <button class="again" id="again">Try again</button>
-    </div>
     <input id="inp" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" aria-label="Type here">
   </div>
   <p class="hint">Tip: Press Tab to get new text and reset the timer.</p>
 
-  <section class="info">
-    <h2>Check your typing speed in WPM</h2>
-    <p>TypeNow is a free typing test that shows your typing speed in words per minute (WPM) and your accuracy. Choose a 30 second, 1 minute or 2 minute test, type the text on the screen, and see your result right away. No account is needed.</p>
-    <h2>How to type faster</h2>
-    <ul>
-      <li>Practice for 10 to 15 minutes every day.</li>
-      <li>Keep your eyes on the screen, not on the keyboard.</li>
-      <li>Use all ten fingers and keep your wrists relaxed.</li>
-      <li>Aim for accuracy first. Speed comes with practice.</li>
-    </ul>
-    <h2>Frequently asked questions</h2>
-    <h3>How is typing speed (WPM) calculated?</h3>
-    <p>Every 5 correct characters count as one word. The total is divided by the minutes you typed. Mistakes are not counted.</p>
-    <h3>What is a good typing speed?</h3>
-    <p>Most people type 35 to 45 WPM. 50 to 60 WPM is good for office work, and above 70 WPM is fast.</p>
-    <h3>Is this typing test free?</h3>
-    <p>Yes. It is free and needs no sign-up.</p>
+  <section id="res" aria-label="Your last result" aria-live="polite" hidden>
+    <h2>Your result <small id="rmeta"></small></h2>
+    <div class="big" id="rw">0</div>
+    <div>words per minute</div>
+    <div class="row">
+      <div><b id="ra">0%</b>accuracy</div>
+      <div><b id="rc">0</b>correct characters</div>
+      <div><b id="re">0</b>mistakes</div>
+    </div>
+    <button class="again" id="again">Try again</button>
   </section>
+
 </main>
 
 <main id="tr" hidden>
@@ -600,21 +656,439 @@ main#tr .tbox:focus,main#voicec .tbox:focus{border-color:var(--acc)}
   };
 })();
 </script>
+<main id="qrc" hidden>
+  <div class="trhead">
+    <h1>QR Code Generator &amp; Scanner</h1>
+    <p class="sub">Create a QR code, or scan one with your camera or an image. Everything works in your browser. Nothing is uploaded.</p>
+  </div>
+  <div class="ctabs" role="group" aria-label="QR tool">
+    <button type="button" data-qtool="gen" aria-pressed="true">Generate QR Code</button>
+    <button type="button" data-qtool="scan" aria-pressed="false">Scan QR Code</button>
+  </div>
+
+  <div class="qrgrid" id="qpg">
+    <div class="trp qf">
+      <label for="qt">QR code type</label>
+      <select id="qt" class="qin">
+        <option value="text">Text or link</option>
+        <option value="wifi">Wi-Fi</option>
+        <option value="email">Email</option>
+        <option value="phone">Phone number</option>
+      </select>
+      <div data-qg="text">
+        <label for="qtext">Text or link</label>
+        <textarea id="qtext" class="qin" placeholder="https://example.com" spellcheck="false"></textarea>
+      </div>
+      <div data-qg="wifi" hidden>
+        <label for="qwn">Network name (SSID)</label><input id="qwn" class="qin" autocomplete="off">
+        <label for="qwp">Password</label><input id="qwp" class="qin" autocomplete="off">
+        <label for="qws">Security</label>
+        <select id="qws" class="qin"><option value="WPA">WPA / WPA2 / WPA3</option><option value="WEP">WEP</option><option value="nopass">No password</option></select>
+      </div>
+      <div data-qg="email" hidden>
+        <label for="qea">Email address</label><input id="qea" type="email" class="qin" autocomplete="off">
+        <label for="qes">Subject (optional)</label><input id="qes" class="qin" autocomplete="off">
+        <label for="qeb">Message (optional)</label><textarea id="qeb" class="qin"></textarea>
+      </div>
+      <div data-qg="phone" hidden>
+        <label for="qpn">Phone number</label><input id="qpn" type="tel" class="qin" placeholder="+92 300 1234567" autocomplete="off">
+      </div>
+      <div class="qopts">
+        <div><label for="qsz">Size</label><select id="qsz" class="qin"><option value="256">Small (256 px)</option><option value="512" selected>Medium (512 px)</option><option value="1024">Large (1024 px)</option></select></div>
+        <div><label for="qec">Error correction</label><select id="qec" class="qin"><option value="L">Low</option><option value="M" selected>Medium</option><option value="Q">Quartile</option><option value="H">High</option></select></div>
+        <div><label for="qfg">Code colour</label><input type="color" id="qfg" class="qin" value="#000000"></div>
+        <div><label for="qbg">Background</label><input type="color" id="qbg" class="qin" value="#ffffff"></div>
+      </div>
+    </div>
+    <div class="trp qprev">
+      <div class="qempty" id="qempty">Your QR code will appear here</div>
+      <canvas id="qcv" hidden aria-label="Generated QR code"></canvas>
+      <p id="qgs" role="status"></p>
+      <div class="tract">
+        <button type="button" class="mainbtn" id="qdp" disabled>Download PNG</button>
+        <button type="button" id="qds" disabled>Download SVG</button>
+        <button type="button" id="qdc" disabled>Copy image</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="trp" id="qps" hidden>
+    <div class="tract" style="justify-content:flex-start">
+      <button type="button" class="mainbtn" id="qcb">Start camera</button>
+      <button type="button" id="qub">Upload image</button>
+      <input type="file" id="qfi" accept="image/*" hidden>
+    </div>
+    <div class="qcam" id="qcam" hidden><video id="qvid" muted playsinline></video></div>
+    <p id="qsst" role="status"></p>
+    <div class="qres" id="qres" hidden>
+      <h2>Scan result</h2>
+      <pre id="qrtext"></pre>
+      <div class="tract"><a id="qopen" class="pbtn" target="_blank" rel="noopener noreferrer" hidden>Open link</a><button type="button" id="qrcopy">Copy text</button></div>
+    </div>
+  </div>
+</main>
+<script>
+(function(){
+  function g(i){return document.getElementById(i)}
+  var QRG=["https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js","https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"];
+  var JSQ=["https://cdnjs.cloudflare.com/ajax/libs/jsQR/1.4.0/jsQR.min.js","https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js"];
+  var ready={};
+  function one(u){return new Promise(function(ok,no){var s=document.createElement("script");s.src=u;s.onload=ok;s.onerror=function(){s.remove();no(new Error("load"))};document.head.appendChild(s)})}
+  function loadAny(list){
+    var k=list[0];
+    return ready[k]||(ready[k]=(async function(){
+      for(var i=0;i<list.length;i++){try{await one(list[i]);return}catch(e){}}
+      ready[k]=null;throw new Error("load");
+    })());
+  }
+  function dl(blob,name){
+    var a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=name;
+    document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(a.href)},1000);
+  }
+
+  /* sub tabs */
+  document.querySelectorAll("[data-qtool]").forEach(function(b){b.addEventListener("click",function(){
+    document.querySelectorAll("[data-qtool]").forEach(function(x){x.setAttribute("aria-pressed",String(x===b))});
+    g("qpg").hidden=b.dataset.qtool!=="gen";g("qps").hidden=b.dataset.qtool!=="scan";
+    if(b.dataset.qtool!=="scan")stopCam();
+  })});
+
+  /* ---------- Generator ---------- */
+  var seq=0,tm,svgText="",typeSel=g("qt");
+  function syncType(){document.querySelectorAll("[data-qg]").forEach(function(el){el.hidden=el.dataset.qg!==typeSel.value})}
+  function payload(){
+    var t=typeSel.value;
+    if(t==="text")return g("qtext").value.trim();
+    if(t==="wifi"){
+      var n=g("qwn").value;if(!n)return "";
+      var sec=g("qws").value,esc=function(x){return x.replace(/([\\;,:"])/g,"\\$1")};
+      return "WIFI:T:"+sec+";S:"+esc(n)+";"+(sec==="nopass"?"":"P:"+esc(g("qwp").value)+";")+";";
+    }
+    if(t==="email"){
+      var a=g("qea").value.trim();if(!a)return "";
+      var q=[],sj=g("qes").value.trim(),bd=g("qeb").value.trim();
+      if(sj)q.push("subject="+encodeURIComponent(sj));
+      if(bd)q.push("body="+encodeURIComponent(bd));
+      return "mailto:"+a+(q.length?"?"+q.join("&"):"");
+    }
+    var ph=g("qpn").value.replace(/[\s()-]+/g,"");
+    return ph?"tel:"+ph:"";
+  }
+  function lum(h){var v=parseInt(h.slice(1),16);return .2126*(v>>16&255)+.7152*(v>>8&255)+.0722*(v&255)}
+  function btns(on){["qdp","qds","qdc"].forEach(function(i){g(i).disabled=!on})}
+  async function render(){
+    var id=++seq,txt=payload(),cv=g("qcv"),st=g("qgs");
+    if(!txt){cv.hidden=true;g("qempty").hidden=false;btns(false);svgText="";st.textContent="";return}
+    try{await loadAny(QRG)}catch(e){st.textContent="Could not load the QR library. Check your internet connection.";return}
+    if(id!==seq)return;
+    try{
+      if(qrcode.stringToBytesFuncs&&qrcode.stringToBytesFuncs["UTF-8"])qrcode.stringToBytes=qrcode.stringToBytesFuncs["UTF-8"];
+      var q=qrcode(0,g("qec").value);q.addData(txt);q.make();
+      var n=q.getModuleCount(),m=4,total=n+2*m,size=+g("qsz").value,cell=Math.max(1,Math.floor(size/total)),px=cell*total,fg=g("qfg").value,bg=g("qbg").value;
+      cv.width=cv.height=px;
+      var x=cv.getContext("2d");x.fillStyle=bg;x.fillRect(0,0,px,px);x.fillStyle=fg;
+      var d="";
+      for(var r=0;r<n;r++)for(var c=0;c<n;c++)if(q.isDark(r,c)){x.fillRect((c+m)*cell,(r+m)*cell,cell,cell);d+="M"+(c+m)+" "+(r+m)+"h1v1h-1z"}
+      svgText='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 '+total+" "+total+'" width="'+size+'" height="'+size+'" shape-rendering="crispEdges"><rect width="'+total+'" height="'+total+'" fill="'+bg+'"/><path d="'+d+'" fill="'+fg+'"/></svg>';
+      cv.hidden=false;g("qempty").hidden=true;btns(true);
+      st.textContent=lum(fg)>lum(bg)?"Tip: use a dark code on a light background, or some scanners may not read it.":"";
+    }catch(e){
+      console.error(e);cv.hidden=true;g("qempty").hidden=false;btns(false);svgText="";
+      st.textContent="This is too long for a QR code. Please shorten it or lower the error correction.";
+    }
+  }
+  function later(){clearTimeout(tm);tm=setTimeout(render,250)}
+  typeSel.addEventListener("change",function(){syncType();render()});
+  ["qtext","qwn","qwp","qws","qea","qes","qeb","qpn","qsz","qec","qfg","qbg"].forEach(function(i){g(i).addEventListener("input",later);g(i).addEventListener("change",later)});
+  g("qdp").onclick=function(){g("qcv").toBlob(function(b){if(b)dl(b,"qr-code.png")},"image/png")};
+  g("qds").onclick=function(){if(svgText)dl(new Blob([svgText],{type:"image/svg+xml"}),"qr-code.svg")};
+  g("qdc").onclick=function(){
+    var st=g("qgs");
+    g("qcv").toBlob(function(b){
+      if(!b||!navigator.clipboard||!window.ClipboardItem){st.textContent="Copying images is not supported in this browser. Use Download PNG instead.";return}
+      navigator.clipboard.write([new ClipboardItem({"image/png":b})]).then(function(){st.textContent="Image copied!";setTimeout(function(){st.textContent=""},2000)},function(){st.textContent="Could not copy the image. Use Download PNG instead."});
+    },"image/png");
+  };
+  syncType();
+
+  /* ---------- Scanner ---------- */
+  var vid=g("qvid"),stream=null,raf=0,sc=document.createElement("canvas"),sst=g("qsst");
+  function showResult(text){
+    g("qres").hidden=false;g("qrtext").textContent=text;
+    var a=g("qopen");
+    if(/^https?:\/\//i.test(text)){a.href=text;a.hidden=false}else{a.removeAttribute("href");a.hidden=true}
+  }
+  function stopCam(){
+    cancelAnimationFrame(raf);
+    if(stream){stream.getTracks().forEach(function(t){t.stop()});stream=null}
+    vid.srcObject=null;g("qcam").hidden=true;g("qcb").textContent="Start camera";
+  }
+  function tick(){
+    if(!stream)return;
+    if(vid.readyState>=2&&vid.videoWidth){
+      var k=Math.min(1,800/vid.videoWidth),w=Math.round(vid.videoWidth*k),h=Math.round(vid.videoHeight*k);
+      sc.width=w;sc.height=h;
+      var x=sc.getContext("2d",{willReadFrequently:true});x.drawImage(vid,0,0,w,h);
+      var r=jsQR(x.getImageData(0,0,w,h).data,w,h,{inversionAttempts:"dontInvert"});
+      if(r&&r.data){showResult(r.data);stopCam();sst.textContent="QR code found.";return}
+    }
+    raf=requestAnimationFrame(tick);
+  }
+  async function startCam(){
+    if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){sst.textContent="Camera is not supported in this browser. Try uploading an image instead.";return}
+    sst.textContent="Starting camera...";
+    try{await loadAny(JSQ)}catch(e){sst.textContent="Could not load the scanner library. Check your internet connection.";return}
+    try{stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:"environment"}},audio:false})}
+    catch(e){sst.textContent=e&&e.name==="NotFoundError"?"No camera was found.":"Camera access is blocked. Allow the camera for this site and try again.";return}
+    vid.srcObject=stream;
+    try{await vid.play()}catch(_){}
+    g("qcam").hidden=false;g("qcb").textContent="Stop camera";g("qres").hidden=true;
+    sst.textContent="Point the camera at a QR code.";
+    tick();
+  }
+  g("qcb").onclick=function(){if(stream){stopCam();sst.textContent=""}else startCam()};
+  g("qub").onclick=function(){g("qfi").click()};
+  g("qfi").onchange=async function(){
+    var f=this.files[0];this.value="";if(!f)return;
+    stopCam();g("qres").hidden=true;sst.textContent="Scanning...";
+    try{await loadAny(JSQ)}catch(e){sst.textContent="Could not load the scanner library. Check your internet connection.";return}
+    var u=URL.createObjectURL(f),im=new Image();
+    im.onload=function(){
+      var k=Math.min(1,1600/Math.max(im.width,im.height)),w=Math.max(1,Math.round(im.width*k)),h=Math.max(1,Math.round(im.height*k));
+      sc.width=w;sc.height=h;
+      var x=sc.getContext("2d",{willReadFrequently:true});x.fillStyle="#fff";x.fillRect(0,0,w,h);x.drawImage(im,0,0,w,h);
+      URL.revokeObjectURL(u);
+      var r=jsQR(x.getImageData(0,0,w,h).data,w,h);
+      if(r&&r.data){showResult(r.data);sst.textContent="QR code found."}
+      else sst.textContent="No QR code found in this image. Try a clearer, closer picture.";
+    };
+    im.onerror=function(){URL.revokeObjectURL(u);sst.textContent="Could not read this image."};
+    im.src=u;
+  };
+  g("qrcopy").onclick=function(){
+    var t=g("qrtext").textContent;if(!t)return;
+    navigator.clipboard.writeText(t).then(function(){sst.textContent="Copied!"},function(){sst.textContent="Could not copy. Select the text and copy it manually."});
+  };
+  /* stop the camera when the tab is left */
+  new MutationObserver(function(){if(g("qrc").hidden)stopCam()}).observe(g("qrc"),{attributes:true,attributeFilter:["hidden"]});
+})();
+</script>
+<main id="agec" hidden>
+  <div class="trhead">
+    <h1>Age &amp; Date Calculator</h1>
+    <p class="sub">Find your exact age, the gap between two dates, or a date after adding or subtracting time.</p>
+  </div>
+  <div class="ctabs" role="group" aria-label="Date tool">
+    <button type="button" data-atool="age" aria-pressed="true">Age Calculator</button>
+    <button type="button" data-atool="diff" aria-pressed="false">Date Difference</button>
+    <button type="button" data-atool="add" aria-pressed="false">Add / Subtract</button>
+  </div>
+
+  <div class="trp qf" id="apa">
+    <div class="qopts-2">
+      <div><label for="agbirth">Date of birth</label><input type="date" id="agbirth" class="qin"></div>
+      <div><label for="agasof">Age at the date of</label><input type="date" id="agasof" class="qin"></div>
+    </div>
+    <p class="anote" id="agnote" role="status"></p>
+    <div id="agout" aria-live="polite"></div>
+  </div>
+
+  <div class="trp qf" id="apd" hidden>
+    <div class="qopts-2">
+      <div><label for="ddfrom">From</label><input type="date" id="ddfrom" class="qin"></div>
+      <div><label for="ddto">To</label><input type="date" id="ddto" class="qin"></div>
+    </div>
+    <label class="qchk"><input type="checkbox" id="ddend"> Include the end date in the count</label>
+    <p class="anote" id="ddnote" role="status"></p>
+    <div id="ddout" aria-live="polite"></div>
+  </div>
+
+  <div class="trp qf" id="apm" hidden>
+    <div class="qopts-2">
+      <div><label for="dsstart">Start date</label><input type="date" id="dsstart" class="qin"></div>
+      <div><label for="dsop">Action</label><select id="dsop" class="qin"><option value="add">Add</option><option value="sub">Subtract</option></select></div>
+    </div>
+    <div class="qopts-4">
+      <div><label for="dsy">Years</label><input type="number" id="dsy" class="qin" min="0" step="1" placeholder="0"></div>
+      <div><label for="dsm">Months</label><input type="number" id="dsm" class="qin" min="0" step="1" placeholder="0"></div>
+      <div><label for="dsw">Weeks</label><input type="number" id="dsw" class="qin" min="0" step="1" placeholder="0"></div>
+      <div><label for="dsd">Days</label><input type="number" id="dsd" class="qin" min="0" step="1" value="30"></div>
+    </div>
+    <div id="dsout" aria-live="polite"></div>
+  </div>
+</main>
+<script>
+(function(){
+  function g(i){return document.getElementById(i)}
+  function iso(d){var m=d.getMonth()+1,x=d.getDate();return d.getFullYear()+"-"+(m<10?"0":"")+m+"-"+(x<10?"0":"")+x}
+  function parse(v){
+    if(!v)return null;var p=v.split("-");if(p.length!==3)return null;
+    var d=new Date(+p[0],+p[1]-1,+p[2]);
+    return isNaN(d)||d.getFullYear()!==+p[0]?null:d;
+  }
+  function today(){var n=new Date();return new Date(n.getFullYear(),n.getMonth(),n.getDate())}
+  function utc(d){return Date.UTC(d.getFullYear(),d.getMonth(),d.getDate())}
+  function days(a,b){return Math.round((utc(b)-utc(a))/864e5)}
+  function dim(y,m){return new Date(y,m+1,0).getDate()}
+  function addM(a,k){
+    var base=new Date(a.getFullYear(),a.getMonth()+k,1);
+    return new Date(base.getFullYear(),base.getMonth(),Math.min(a.getDate(),dim(base.getFullYear(),base.getMonth())));
+  }
+  function ymd(a,b){
+    var M=(b.getFullYear()-a.getFullYear())*12+(b.getMonth()-a.getMonth());
+    if(addM(a,M)>b)M--;
+    return {y:Math.floor(M/12),m:M%12,d:days(addM(a,M),b)};
+  }
+  function fmt(d){return d.toLocaleDateString("en-GB",{weekday:"long",day:"numeric",month:"long",year:"numeric"})}
+  function n(x){return x.toLocaleString("en-US")}
+  function card(num,label,sm){return '<div class="acard'+(sm?' sm':'')+'"><b>'+n(num)+'</b><span>'+label+'</span></div>'}
+  function num(id){var v=Math.floor(Math.abs(+g(id).value));return isFinite(v)?v:0}
+
+  /* sub tabs */
+  document.querySelectorAll("[data-atool]").forEach(function(b){b.addEventListener("click",function(){
+    document.querySelectorAll("[data-atool]").forEach(function(x){x.setAttribute("aria-pressed",String(x===b))});
+    g("apa").hidden=b.dataset.atool!=="age";g("apd").hidden=b.dataset.atool!=="diff";g("apm").hidden=b.dataset.atool!=="add";
+  })});
+
+  /* age */
+  function age(){
+    var b=parse(g("agbirth").value),t=parse(g("agasof").value)||today(),out=g("agout"),note=g("agnote");
+    out.innerHTML="";
+    if(!b){note.textContent="Enter a date of birth to see the age.";return}
+    if(b>t){note.textContent="The date of birth must be before the \"Age at the date of\" date.";return}
+    var r=ymd(b,t),td=days(b,t),nb=new Date(t.getFullYear(),b.getMonth(),b.getDate());
+    if(nb<t)nb=new Date(t.getFullYear()+1,b.getMonth(),b.getDate());
+    var left=days(t,nb);
+    note.textContent="Born on a "+b.toLocaleDateString("en-GB",{weekday:"long"})+". "+(left===0?"Their birthday falls on this very date.":"The next birthday is in "+n(left)+" day"+(left===1?"":"s")+", on "+fmt(nb)+".");
+    out.innerHTML='<div class="agres">'+card(r.y,"Years")+card(r.m,"Months")+card(r.d,"Days")+'</div>'+
+      '<div class="agres">'+card(r.y*12+r.m,"Total months",1)+card(Math.floor(td/7),"Total weeks",1)+card(td,"Total days",1)+card(td*24,"Total hours",1)+'</div>';
+  }
+  /* difference */
+  function diff(){
+    var a=parse(g("ddfrom").value),b=parse(g("ddto").value),out=g("ddout"),note=g("ddnote");
+    out.innerHTML="";note.textContent="";
+    if(!a||!b){note.textContent="Choose both dates.";return}
+    if(a>b){var x=a;a=b;b=x;note.textContent="The dates were in reverse order, so they were swapped."}
+    var inc=g("ddend").checked,end=inc?new Date(b.getFullYear(),b.getMonth(),b.getDate()+1):b;
+    var r=ymd(a,end),td=days(a,end),biz=0;
+    for(var i=0;i<td;i++){var w=(a.getDay()+i)%7;if(w!==0&&w!==6)biz++}
+    out.innerHTML='<div class="agres">'+card(r.y,"Years")+card(r.m,"Months")+card(r.d,"Days")+'</div>'+
+      '<div class="agres">'+card(r.y*12+r.m,"Total months",1)+card(Math.floor(td/7),"Total weeks",1)+card(td,"Total days",1)+card(biz,"Weekdays (Mon-Fri)",1)+'</div>';
+  }
+  /* add / subtract */
+  function addsub(){
+    var s0=parse(g("dsstart").value),out=g("dsout");out.innerHTML="";
+    if(!s0){out.innerHTML='<p class="anote">Choose a start date.</p>';return}
+    var sign=g("dsop").value==="sub"?-1:1,y=num("dsy"),m=num("dsm"),w=num("dsw"),d=num("dsd");
+    var base=new Date(s0.getFullYear(),s0.getMonth()+sign*(y*12+m),1);
+    var day=Math.min(s0.getDate(),dim(base.getFullYear(),base.getMonth()));
+    var res=new Date(base.getFullYear(),base.getMonth(),day+sign*(w*7+d));
+    if(isNaN(res)||res.getFullYear()<1||res.getFullYear()>9999){out.innerHTML='<p class="anote">That result is out of range.</p>';return}
+    var dd=days(s0,res);
+    out.innerHTML='<div class="abig">'+fmt(res)+'<small>'+n(Math.abs(dd))+' day'+(Math.abs(dd)===1?"":"s")+(dd<0?" before":" after")+" the start date"+'</small></div>';
+  }
+  ["agbirth","agasof"].forEach(function(i){g(i).addEventListener("input",age);g(i).addEventListener("change",age)});
+  ["ddfrom","ddto","ddend"].forEach(function(i){g(i).addEventListener("input",diff);g(i).addEventListener("change",diff)});
+  ["dsstart","dsop","dsy","dsm","dsw","dsd"].forEach(function(i){g(i).addEventListener("input",addsub);g(i).addEventListener("change",addsub)});
+  var t0=iso(today());
+  g("agasof").value=t0;g("ddfrom").value=t0;g("ddto").value=t0;g("dsstart").value=t0;
+  age();diff();addsub();
+})();
+</script>
+<main id="casec" hidden>
+  <div class="trhead">
+    <h1>Case Converter</h1>
+    <p class="sub">Type or paste your text, then pick a style. You can undo any change.</p>
+  </div>
+  <textarea id="cvtxt" class="qin" placeholder="Type or paste your text here..." dir="auto" spellcheck="false"></textarea>
+  <div class="pills" role="group" aria-label="Case style" style="margin-top:18px">
+    <button type="button" data-cv="upper">UPPERCASE</button>
+    <button type="button" data-cv="lower">lowercase</button>
+    <button type="button" data-cv="title">Title Case</button>
+    <button type="button" data-cv="sentence">Sentence case</button>
+    <button type="button" data-cv="alt">aLtErNaTiNg</button>
+    <button type="button" data-cv="inverse">iNVERSE</button>
+    <button type="button" data-cv="camel">camelCase</button>
+    <button type="button" data-cv="pascal">PascalCase</button>
+    <button type="button" data-cv="snake">snake_case</button>
+    <button type="button" data-cv="kebab">kebab-case</button>
+  </div>
+  <div class="trstats"><span>Characters: <b id="cvcc">0</b></span><span>Words: <b id="cvcw">0</b></span><span>Sentences: <b id="cvcs">0</b></span><span>Lines: <b id="cvcl">0</b></span></div>
+  <div class="tract">
+    <button type="button" class="mainbtn" id="cvcopy">Copy Text</button>
+    <button type="button" id="cvundo">Undo</button>
+    <button type="button" id="cvdl">Download .txt</button>
+    <button type="button" id="cvclear">Clear</button>
+  </div>
+  <p id="cvst" role="status"></p>
+</main>
+<script>
+(function(){
+  function g(i){return document.getElementById(i)}
+  var box=g("cvtxt"),st=g("cvst"),hist=[],ft;
+  function flash(m){st.textContent=m;clearTimeout(ft);if(m)ft=setTimeout(function(){st.textContent=""},2500)}
+  function counts(){
+    var t=box.value,tt=t.trim();
+    g("cvcc").textContent=t.length;
+    g("cvcw").textContent=tt?tt.split(/\s+/).length:0;
+    g("cvcs").textContent=(t.match(/[^.!?\u06D4]+[.!?\u06D4]*/g)||[]).filter(function(x){return x.trim()}).length;
+    g("cvcl").textContent=t?t.split("\n").length:0;
+  }
+  function words(t){
+    t=t.replace(/['\u2019]/g,"").replace(/([\p{Ll}\p{N}])(\p{Lu}\p{Ll})/gu,"$1 $2").replace(/(\p{Lu})(\p{Lu}\p{Ll})/gu,"$1 $2");
+    return (t.match(/[\p{L}\p{N}]+/gu)||[]).map(function(w){return w.toLowerCase()});
+  }
+  function cap(w){return w.charAt(0).toUpperCase()+w.slice(1)}
+  function perLine(fn){return function(t){return t.split("\n").map(fn).join("\n")}}
+  var F={
+    upper:function(t){return t.toUpperCase()},
+    lower:function(t){return t.toLowerCase()},
+    title:function(t){return t.toLowerCase().replace(/(^|[^\p{L}\p{N}'\u2019])(\p{L})/gu,function(m,a,b){return a+b.toUpperCase()})},
+    sentence:function(t){return t.toLowerCase().replace(/(^\s*|[.!?\u06D4]\s+|\n\s*)(\p{L})/gu,function(m,a,b){return a+b.toUpperCase()})},
+    alt:function(t){var i=0;return Array.from(t).map(function(c){return /\p{L}/u.test(c)?((i++%2)?c.toUpperCase():c.toLowerCase()):c}).join("")},
+    inverse:function(t){return Array.from(t).map(function(c){return c!==c.toLowerCase()?c.toLowerCase():c.toUpperCase()}).join("")},
+    camel:perLine(function(l){return words(l).map(function(w,i){return i?cap(w):w}).join("")}),
+    pascal:perLine(function(l){return words(l).map(cap).join("")}),
+    snake:perLine(function(l){return words(l).join("_")}),
+    kebab:perLine(function(l){return words(l).join("-")})
+  };
+  document.querySelectorAll("[data-cv]").forEach(function(b){b.addEventListener("click",function(){
+    var v=box.value;if(!v){flash("Type or paste some text first.");box.focus();return}
+    var out=F[b.dataset.cv](v);
+    if(out!==v){hist.push(v);if(hist.length>30)hist.shift();box.value=out;counts()}
+    flash("Converted to "+b.textContent+".");
+  })});
+  box.addEventListener("input",counts);
+  g("cvundo").onclick=function(){if(!hist.length){flash("Nothing to undo.");return}box.value=hist.pop();counts();flash("Undone.")};
+  g("cvcopy").onclick=function(){
+    if(!box.value){flash("Nothing to copy yet.");return}
+    navigator.clipboard.writeText(box.value).then(function(){flash("Copied!")},function(){flash("Could not copy. Select the text and copy it manually.")});
+  };
+  g("cvdl").onclick=function(){
+    if(!box.value){flash("Nothing to download yet.");return}
+    var a=document.createElement("a");a.href=URL.createObjectURL(new Blob([box.value],{type:"text/plain;charset=utf-8"}));
+    a.download="converted-text.txt";document.body.appendChild(a);a.click();a.remove();
+    setTimeout(function(){URL.revokeObjectURL(a.href)},1000);
+  };
+  g("cvclear").onclick=function(){if(box.value)hist.push(box.value);box.value="";counts();flash("");box.focus()};
+  counts();
+})();
+</script>
 <script>
 (function(){
   var hero=document.getElementById("hero"),typ=document.getElementById("start"),tr=document.getElementById("tr"),pdf=document.getElementById("pdfc"),vo=document.getElementById("voicec");
   var src=document.getElementById("trsrc"),out=document.getElementById("trout"),st=document.getElementById("trstatus"),cc=document.getElementById("tcc"),cw=document.getElementById("tcw"),cs=document.getElementById("tcs");
   var title0=document.title,seq=0,tm;
   function route(v){
-    var h=typeof v==="string"?v:location.hash,t=h==="#translation",p=h==="#pdf-converter",v2=h==="#voice-to-text",c=h==="#compress",o=t||p||v2||c;
-    hero.hidden=o;typ.hidden=o;tr.hidden=!t;pdf.hidden=!p;vo.hidden=!v2;document.getElementById("compc").hidden=!c;
-    [["m-typing",!o],["m-tr",t],["m-pdf",p],["m-voice",v2],["m-comp",c]].forEach(function(x){document.getElementById(x[0]).setAttribute("aria-current",x[1]?"page":"false")});
-    document.title=t?"Roman Urdu to English Translator | TypeNow":p?"PDF Converter - Word to PDF, Image to PDF | TypeNow":v2?"Voice to Text - Free Speech to Text | TypeNow":c?"Compress PDF & Image - Reduce File Size Online | TypeNow":title0;
+    var h=typeof v==="string"?v:location.hash,t=h==="#translation",p=h==="#pdf-converter",v2=h==="#voice-to-text",c=h==="#compress",q=h==="#qr-code",ag=h==="#age-calculator",cv2=h==="#case-converter",o=t||p||v2||c||q||ag||cv2;
+    hero.hidden=o;typ.hidden=o;tr.hidden=!t;pdf.hidden=!p;vo.hidden=!v2;document.getElementById("compc").hidden=!c;document.getElementById("qrc").hidden=!q;document.getElementById("agec").hidden=!ag;document.getElementById("casec").hidden=!cv2;
+    [["m-typing",!o],["m-tr",t],["m-pdf",p],["m-voice",v2],["m-comp",c],["m-qr",q],["m-age",ag],["m-case",cv2]].forEach(function(x){document.getElementById(x[0]).setAttribute("aria-current",x[1]?"page":"false")});
+    document.title=t?"Roman Urdu to English Translator | TypeNow":p?"PDF Converter - Word to PDF, Image to PDF | TypeNow":v2?"Voice to Text - Free Speech to Text | TypeNow":c?"Compress PDF & Image - Reduce File Size Online | TypeNow":q?"QR Code Generator & Scanner - Free | TypeNow":ag?"Age Calculator & Date Calculator - Free | TypeNow":cv2?"Case Converter - Uppercase, Lowercase, Title Case | TypeNow":title0;
     if(o)window.scrollTo(0,0);
     if(t)setTimeout(function(){src.focus()},50);
   }
   window.addEventListener("hashchange",route);route();
-  ["m-typing","m-tr","m-pdf","m-voice","m-comp"].forEach(function(id){
+  ["m-typing","m-tr","m-pdf","m-voice","m-comp","m-qr","m-age","m-case"].forEach(function(id){
     var a=document.getElementById(id);
     a.addEventListener("click",function(e){
       e.preventDefault();
@@ -682,7 +1156,33 @@ main#tr .tbox:focus,main#voicec .tbox:focus{border-color:var(--acc)}
   };
 })();
 </script>
-<footer class="foot">&copy; TypeNow. Free typing test.</footer>
+<footer class="foot">
+  <div class="foot-in">
+    <div class="foot-brand">
+      <a class="logo" href="#typing" data-up aria-label="TypeNow home"><svg viewBox="0 0 48 48" aria-hidden="true"><rect x="3" y="3" width="42" height="42" rx="11" fill="#0f766e"/><rect x="9" y="9" width="30" height="30" rx="8" fill="#14b8a6"/><path d="M17 18h14M24 18v14" stroke="#fff" stroke-width="4.5" stroke-linecap="round"/></svg>TypeNow</a>
+      <p>Free everyday tools in one place: typing test, translator, PDF tools and voice typing. No sign-up needed.</p>
+    </div>
+    <nav class="foot-col" aria-label="Tools">
+      <h3>Tools</h3>
+      <a href="#typing" data-up>Typing Test</a>
+      <a href="#translation" data-up>Translation</a>
+      <a href="#pdf-converter" data-up>PDF Converter</a>
+      <a href="#voice-to-text" data-up>Voice to Text</a>
+      <a href="#compress" data-up>Compress PDF &amp; Image</a>
+      <a href="#qr-code" data-up>QR Code Generator &amp; Scanner</a>
+      <a href="#age-calculator" data-up>Age &amp; Date Calculator</a>
+      <a href="#case-converter" data-up>Case Converter</a>
+    </nav>
+    <div class="foot-col">
+      <h3>Your privacy</h3>
+      <p>PDF, image and typing tools run inside your browser, so your files are never uploaded. Only the text you type into the translator is sent to a translation service.</p>
+    </div>
+  </div>
+  <div class="foot-bar">
+    <span>&copy; <span id="yr">2026</span> TypeNow. All rights reserved. Made with <span class="heart" aria-label="love">&#9829;</span> for fast typists.</span>
+    <button type="button" id="totop" aria-label="Back to top">&#8593; Back to top</button>
+  </div>
+</footer>
 
 <script>
 /* slider */
@@ -741,21 +1241,26 @@ function start(){
     if(left<=0)finish();
   },250);
 }
+function showRes(r){
+  $("rw").textContent=r.wpm;$("ra").textContent=r.acc+"%";
+  $("rc").textContent=r.ok;$("re").textContent=r.err;
+  $("rmeta").textContent="("+(r.dur===120?"2 min":r.dur+" sec")+" test)";
+  $("res").hidden=false;
+}
 function finish(){
   if(done)return;done=true;clearInterval(timer);
   const v=inp.value,ok=[...v].filter((c,i)=>c===target[i]).length;
-  const mins=dur/60;
-  $("rw").textContent=Math.round(ok/5/mins);
-  $("ra").textContent=(v.length?Math.round(ok/v.length*100):100)+"%";
-  $("rc").textContent=ok;$("re").textContent=v.length-ok;
-  textEl.style.display="none";$("res").style.display="block";
+  const r={wpm:Math.round(ok/5/(dur/60)),acc:v.length?Math.round(ok/v.length*100):100,ok:ok,err:v.length-ok,dur:dur};
+  showRes(r);
+  try{localStorage.setItem("typenow_last",JSON.stringify(r))}catch(_){}
+  textEl.style.opacity=".35";
   inp.disabled=true;$("again").focus();
 }
 function reset(){
   clearInterval(timer);started=false;done=false;left=dur;
   target=gen();inp.disabled=false;inp.value="";
   $("time").textContent=dur;$("wpm").textContent=0;$("acc").textContent=100;
-  $("res").style.display="none";textEl.style.display="block";textEl.scrollTop=0;
+  textEl.style.opacity="";textEl.scrollTop=0;
   render();if(window.__ready)inp.focus();
 }
 inp.addEventListener("input",()=>{
@@ -775,6 +1280,7 @@ document.querySelectorAll(".bar .modes button").forEach(b=>b.addEventListener("c
   document.querySelectorAll(".bar .modes button").forEach(x=>x.setAttribute("aria-pressed","false"));
   b.setAttribute("aria-pressed","true");dur=+b.dataset.t;reset();
 }));
+try{const sv=JSON.parse(localStorage.getItem("typenow_last"));if(sv&&typeof sv.wpm==="number")showRes(sv)}catch(_){}
 reset();
 window.__ready=true;
 </script>
@@ -795,6 +1301,14 @@ window.__ready=true;
   requestAnimationFrame(function(){requestAnimationFrame(function(){menu.classList.add("ready")})});
   function sc(){bar.classList.toggle("scrolled",window.scrollY>8)}
   window.addEventListener("scroll",sc,{passive:true});sc();
+})();
+</script>
+<script>
+(function(){
+  var y=document.getElementById("yr");if(y)y.textContent=new Date().getFullYear();
+  var up=function(){window.scrollTo({top:0,behavior:"smooth"})};
+  document.getElementById("totop").addEventListener("click",up);
+  document.querySelectorAll("[data-up]").forEach(function(a){a.addEventListener("click",function(){setTimeout(up,60)})});
 })();
 </script>
 </body>
