@@ -72,9 +72,28 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:3px solid var(-
 .again{background:var(--acc);border-color:var(--acc);color:#fff;font-weight:700;padding:11px 26px}
 [hidden]{display:none!important}
 .menu{display:flex;gap:6px;flex-wrap:wrap}
-.menu a{padding:8px 14px;border-radius:8px;color:var(--ink);text-decoration:none;font-weight:700}
-.menu a:hover{background:var(--line)}
-.menu a[aria-current="page"]{background:var(--acc);color:#fff}
+.topbar{position:sticky;top:0;z-index:50;background:color-mix(in srgb,var(--bg) 80%,transparent);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border-bottom:1px solid transparent;transition:border-color .3s,box-shadow .3s;animation:navDrop .7s cubic-bezier(.2,.8,.2,1) both}
+.topbar.scrolled{border-bottom-color:var(--line);box-shadow:0 8px 28px rgba(15,23,34,.10)}
+.topbar .nav{flex-wrap:wrap;gap:10px 16px}
+@keyframes navDrop{from{opacity:0;transform:translateY(-100%)}to{opacity:1;transform:none}}
+@keyframes linkIn{from{opacity:0;transform:translateY(-8px) scale(.96)}to{opacity:1;transform:none}}
+.logo svg{transition:transform .55s cubic-bezier(.3,1.7,.5,1);filter:drop-shadow(0 4px 10px rgba(15,118,110,.35))}
+.logo:hover svg{transform:rotate(-12deg) scale(1.12)}
+.logo:active svg{transform:scale(.92)}
+.menu{position:relative;gap:2px;padding:5px;background:var(--card);border:1px solid var(--line);border-radius:999px;box-shadow:0 2px 10px rgba(15,23,34,.06)}
+.menu .ind{position:absolute;top:5px;bottom:5px;left:0;width:0;border-radius:999px;background:linear-gradient(135deg,#0f766e,#14b8a6);box-shadow:0 6px 16px rgba(20,184,166,.40);opacity:0;pointer-events:none}
+.menu.has-ind .ind{opacity:1}
+.menu.ready .ind{transition:transform .45s cubic-bezier(.3,1.25,.4,1),width .45s cubic-bezier(.3,1.25,.4,1)}
+.menu a{position:relative;z-index:1;display:inline-flex;align-items:center;gap:7px;padding:9px 16px;border-radius:999px;color:var(--ink);text-decoration:none;font-weight:700;white-space:nowrap;transition:color .25s,transform .25s,background .25s;animation:linkIn .55s cubic-bezier(.2,.8,.2,1) both}
+.menu a:nth-of-type(1){animation-delay:.15s}.menu a:nth-of-type(2){animation-delay:.22s}.menu a:nth-of-type(3){animation-delay:.29s}.menu a:nth-of-type(4){animation-delay:.36s}.menu a:nth-of-type(5){animation-delay:.43s}
+.menu a svg{width:18px;height:18px;flex:none;transition:transform .35s cubic-bezier(.3,1.7,.5,1)}
+.menu a:hover{color:var(--acc);transform:translateY(-2px)}
+.menu a:hover svg{transform:scale(1.2) rotate(-8deg)}
+.menu a:active{transform:translateY(0) scale(.96)}
+.menu a[aria-current="page"]{color:#fff;transform:none}
+.menu:not(.has-ind) a[aria-current="page"]{background:linear-gradient(135deg,#0f766e,#14b8a6)}
+@media (max-width:760px){.topbar .nav{justify-content:center}.menu{max-width:100%;overflow-x:auto;scrollbar-width:none}.menu::-webkit-scrollbar{display:none}.menu a{padding:9px 13px}}
+@media (prefers-reduced-motion:reduce){.topbar,.menu a,.logo svg,.menu .ind{animation:none!important;transition:none!important}.menu a:hover{transform:none}}
 .trgrid{display:grid;grid-template-columns:1fr;gap:16px}
 @media (max-width:700px){.trgrid{grid-template-columns:1fr}}
 .trp{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px}
@@ -143,19 +162,19 @@ main#tr .tbox:focus,main#voicec .tbox:focus{border-color:var(--acc)}
 </style>
 </head>
 <body>
-<header class="nav">
+<header class="topbar" id="topbar"><div class="nav">
   <a class="logo" href="#" aria-label="TypeNow home">
     <svg viewBox="0 0 48 48" aria-hidden="true"><rect x="3" y="3" width="42" height="42" rx="11" fill="#0f766e"/><rect x="9" y="9" width="30" height="30" rx="8" fill="#14b8a6"/><path d="M17 18h14M24 18v14" stroke="#fff" stroke-width="4.5" stroke-linecap="round"/></svg>
     TypeNow
   </a>
   <nav class="menu" aria-label="Main menu">
-    <a href="#typing" id="m-typing" aria-current="page">Typing Test</a>
-    <a href="#translation" id="m-tr">Translation</a>
-    <a href="#pdf-converter" id="m-pdf">PDF Converter</a>
-    <a href="#voice-to-text" id="m-voice">Voice to Text</a>
-    <a href="#compress" id="m-comp">Compress PDF &amp; Image</a>
+    <a href="#typing" id="m-typing" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M6 10h.01M10 10h.01M14 10h.01M18 10h.01M7 14h10"/></svg>Typing Test</a>
+    <a href="#translation" id="m-tr"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 8h8M9 4v4M7 8c0 3 3 6 6 7M11 8c0 3-3 6-6 7"/><path d="M14 20l4-9 4 9M15.5 17h5"/></svg>Translation</a>
+    <a href="#pdf-converter" id="m-pdf"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/></svg>PDF Converter</a>
+    <a href="#voice-to-text" id="m-voice"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="3" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>Voice to Text</a>
+    <a href="#compress" id="m-comp"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 14h6v6M20 10h-6V4M14 10l7-7M3 21l7-7"/></svg>Compress PDF &amp; Image</a>
   </nav>
-</header>
+</div></header>
 
 <section class="hero" id="hero" aria-label="Featured">
   <div class="slide on">
@@ -758,6 +777,25 @@ document.querySelectorAll(".bar .modes button").forEach(b=>b.addEventListener("c
 }));
 reset();
 window.__ready=true;
+</script>
+<script>
+(function(){
+  var bar=document.getElementById("topbar"),menu=document.querySelector(".menu"),ind=document.createElement("span");
+  ind.className="ind";ind.setAttribute("aria-hidden","true");menu.insertBefore(ind,menu.firstChild);
+  function place(){
+    var a=menu.querySelector('[aria-current="page"]');if(!a)return;
+    ind.style.width=a.offsetWidth+"px";ind.style.transform="translateX("+a.offsetLeft+"px)";
+    menu.classList.add("has-ind");
+    if(menu.scrollWidth>menu.clientWidth)menu.scrollTo({left:a.offsetLeft-(menu.clientWidth-a.offsetWidth)/2,behavior:"smooth"});
+  }
+  new MutationObserver(place).observe(menu,{attributes:true,subtree:true,attributeFilter:["aria-current"]});
+  window.addEventListener("resize",place);
+  place();
+  if(document.fonts&&document.fonts.ready)document.fonts.ready.then(place);
+  requestAnimationFrame(function(){requestAnimationFrame(function(){menu.classList.add("ready")})});
+  function sc(){bar.classList.toggle("scrolled",window.scrollY>8)}
+  window.addEventListener("scroll",sc,{passive:true});sc();
+})();
 </script>
 </body>
 </html>
