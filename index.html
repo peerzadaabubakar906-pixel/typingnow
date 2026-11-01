@@ -125,6 +125,21 @@ main#tr .tbox:focus,main#voicec .tbox:focus{border-color:var(--acc)}
 .info h3{font-size:1.1rem;margin:18px 0 4px}
 .info p,.info li{color:var(--ink)}
 .foot{max-width:1080px;margin:0 auto;padding:0 20px 30px;color:var(--dim);font-size:.9rem}
+.ctabs{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:0 0 18px}
+.ctabs button{font:inherit;border:1px solid var(--line);background:var(--card);color:var(--ink);padding:9px 20px;border-radius:8px;cursor:pointer}
+.ctabs button[aria-pressed="true"]{background:var(--acc);border-color:var(--acc);color:#fff}
+.pdfpanel .copt{display:flex;flex-wrap:wrap;gap:14px 20px;align-items:center;margin:14px 0 4px}
+.pdfpanel .copt label{display:inline;margin:0}
+.copt select{font:inherit;color:var(--ink);background:var(--card);border:2px solid var(--line);border-radius:10px;padding:8px 10px}
+.copt input[type=range]{vertical-align:middle;accent-color:var(--acc)}
+.cnote{color:var(--dim);font-size:.92rem;margin:10px 0 0}
+.cnames{margin:12px 0 0;padding-left:20px;color:var(--dim)}
+.cres{list-style:none;margin:14px 0 0;padding:0;display:grid;gap:8px}
+.cres li{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;justify-content:space-between;border:1px solid var(--line);border-radius:10px;padding:10px 14px;background:var(--bg)}
+.cres .nm{font-weight:700;word-break:break-all;flex:1 1 180px}
+.cres .sz{color:var(--dim)}
+.cres .sv{color:var(--acc);font-weight:700}
+.cres a.pbtn{text-decoration:none;padding:7px 16px}
 </style>
 </head>
 <body>
@@ -138,6 +153,7 @@ main#tr .tbox:focus,main#voicec .tbox:focus{border-color:var(--acc)}
     <a href="#translation" id="m-tr">Translation</a>
     <a href="#pdf-converter" id="m-pdf">PDF Converter</a>
     <a href="#voice-to-text" id="m-voice">Voice to Text</a>
+    <a href="#compress" id="m-comp">Compress PDF &amp; Image</a>
   </nav>
 </header>
 
@@ -391,21 +407,195 @@ main#tr .tbox:focus,main#voicec .tbox:focus{border-color:var(--acc)}
   g("vclear").onclick=function(){committed="";box.value="";counts();flash("")};
 })();
 </script>
+<main id="compc" hidden>
+  <div class="trhead">
+    <h1>Compress PDF &amp; Image</h1>
+    <p class="sub">Reduce file size right in your browser. Your files are not uploaded to any server.</p>
+  </div>
+  <div class="ctabs" role="group" aria-label="Compressor type">
+    <button type="button" data-ctool="pdf" aria-pressed="true">Compress PDF</button>
+    <button type="button" data-ctool="img" aria-pressed="false">Compress Image</button>
+  </div>
+
+  <div class="trp pdfpanel" id="cpp">
+    <label for="cpf">Choose a PDF file</label>
+    <input type="file" id="cpf" accept=".pdf,application/pdf">
+    <div class="copt">
+      <label for="cpq">Compression level</label>
+      <select id="cpq">
+        <option value="strong">Strong (smallest file)</option>
+        <option value="medium" selected>Recommended</option>
+        <option value="light">Light (best quality)</option>
+      </select>
+    </div>
+    <p class="cnote">Each page is re-saved as a compressed image, so text in the new PDF can no longer be selected or searched.</p>
+    <div class="trbar"><button class="pbtn" id="cpb" type="button">Compress PDF</button><span id="cps" role="status"></span></div>
+    <ul class="cres" id="cpl"></ul>
+  </div>
+
+  <div class="trp pdfpanel" id="cpi" hidden>
+    <label for="cif">Choose images (JPG, PNG, WebP)</label>
+    <input type="file" id="cif" accept="image/*" multiple>
+    <ul class="cnames" id="cil"></ul>
+    <div class="copt">
+      <label for="ciq">Quality <b id="ciqv">70</b>%</label>
+      <input type="range" id="ciq" min="20" max="95" value="70">
+      <label for="cim">Max size</label>
+      <select id="cim">
+        <option value="0">Original size</option>
+        <option value="2560">2560 px</option>
+        <option value="1920" selected>1920 px</option>
+        <option value="1280">1280 px</option>
+        <option value="800">800 px</option>
+      </select>
+      <label for="cit">Format</label>
+      <select id="cit">
+        <option value="image/jpeg">JPG</option>
+        <option value="image/webp">WebP</option>
+      </select>
+    </div>
+    <div class="trbar"><button class="pbtn" id="cib" type="button">Compress images</button><button id="cic" type="button">Clear all</button><button id="ciz" type="button" hidden>Download all (.zip)</button><span id="cis" role="status"></span></div>
+    <ul class="cres" id="cl"></ul>
+  </div>
+</main>
+<script>
+(function(){
+  function g(i){return document.getElementById(i)}
+  var loaded={};
+  function load(u){return loaded[u]||(loaded[u]=new Promise(function(ok,no){var s=document.createElement("script");s.src=u;s.onload=ok;s.onerror=function(){loaded[u]=null;no(new Error("load"))};document.head.appendChild(s)}))}
+  var U={
+    pdf:"https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js",
+    worker:"https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js",
+    jspdf:"https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js",
+    zip:"https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"
+  };
+  function size(n){return n<1024?n+" B":n<1048576?(n/1024).toFixed(1)+" KB":(n/1048576).toFixed(2)+" MB"}
+  var urls=[];
+  function wipe(ul){ul.innerHTML="";urls.forEach(function(u){URL.revokeObjectURL(u)});urls=[]}
+  function addRes(ul,name,orig,blob,outName){
+    var li=document.createElement("li"),n=document.createElement("span"),s=document.createElement("span"),v=document.createElement("b");
+    n.className="nm";n.textContent=name;s.className="sz";v.className="sv";
+    var smaller=blob&&blob.size<orig;
+    s.textContent=size(orig)+(smaller?" \u2192 "+size(blob.size)+" ":" ");
+    v.textContent=smaller?"(-"+Math.round((1-blob.size/orig)*100)+"%)":"(already small, cannot be reduced further)";
+    s.appendChild(v);li.appendChild(n);li.appendChild(s);
+    if(smaller){
+      var a=document.createElement("a"),u=URL.createObjectURL(blob);urls.push(u);
+      a.className="pbtn";a.href=u;a.download=outName;a.textContent="Download";li.appendChild(a);
+    }
+    ul.appendChild(li);
+  }
+  function baseName(n){return n.replace(/\.[^.]+$/,"")}
+
+  /* sub tabs */
+  document.querySelectorAll("[data-ctool]").forEach(function(b){b.addEventListener("click",function(){
+    document.querySelectorAll("[data-ctool]").forEach(function(x){x.setAttribute("aria-pressed",String(x===b))});
+    g("cpp").hidden=b.dataset.ctool!=="pdf";g("cpi").hidden=b.dataset.ctool!=="img";
+  })});
+
+  /* ---------- PDF ---------- */
+  var LV={strong:{s:1,q:.5},medium:{s:1.5,q:.7},light:{s:2,q:.85}};
+  g("cpb").onclick=async function(){
+    var btn=this,f=g("cpf").files[0],st=g("cps"),ul=g("cpl");
+    if(!f){st.textContent="Choose a PDF file first.";return}
+    if(!/\.pdf$/i.test(f.name)&&f.type!=="application/pdf"){st.textContent="Only PDF files are supported.";return}
+    var lv=LV[g("cpq").value]||LV.medium,pdf=null;
+    wipe(ul);btn.disabled=true;st.textContent="Loading...";
+    try{
+      await Promise.all([load(U.pdf),load(U.jspdf)]);
+      pdfjsLib.GlobalWorkerOptions.workerSrc=U.worker;
+      pdf=await pdfjsLib.getDocument({data:new Uint8Array(await f.arrayBuffer())}).promise;
+      var doc=null;
+      for(var i=1;i<=pdf.numPages;i++){
+        st.textContent="Compressing page "+i+" of "+pdf.numPages+"...";
+        var pg=await pdf.getPage(i),v1=pg.getViewport({scale:1}),sc=lv.s,big=Math.max(v1.width,v1.height)*sc;
+        if(big>4000)sc*=4000/big;
+        var vp=pg.getViewport({scale:sc}),c=document.createElement("canvas");
+        c.width=Math.round(vp.width);c.height=Math.round(vp.height);
+        var x=c.getContext("2d");x.fillStyle="#fff";x.fillRect(0,0,c.width,c.height);
+        await pg.render({canvasContext:x,viewport:vp}).promise;
+        var url=c.toDataURL("image/jpeg",lv.q),w=v1.width,h=v1.height,o=w>h?"l":"p";
+        if(!doc)doc=new window.jspdf.jsPDF({unit:"pt",format:[w,h],orientation:o,compress:true});
+        else doc.addPage([w,h],o);
+        doc.addImage(url,"JPEG",0,0,w,h,undefined,"FAST");
+        c.width=c.height=0;pg.cleanup();
+      }
+      addRes(ul,f.name,f.size,doc.output("blob"),baseName(f.name)+"-compressed.pdf");
+      st.textContent="Done.";
+    }catch(e){
+      console.error(e);
+      st.textContent=e&&e.name==="PasswordException"?"This PDF is password protected. Remove the password and try again.":"Could not compress this file. Check that it is a valid PDF and try again.";
+    }
+    if(pdf)pdf.destroy();
+    btn.disabled=false;
+  };
+
+  /* ---------- Images ---------- */
+  var imgs=[],results=[];
+  var EXT={"image/jpeg":".jpg","image/webp":".webp","image/png":".png"};
+  function names(){var ul=g("cil");ul.innerHTML="";imgs.forEach(function(f){var li=document.createElement("li");li.textContent=f.name+" ("+size(f.size)+")";ul.appendChild(li)})}
+  g("ciq").oninput=function(){g("ciqv").textContent=this.value};
+  g("cif").onchange=function(){imgs=imgs.concat([].slice.call(this.files));this.value="";g("cis").textContent="";names()};
+  g("cic").onclick=function(){imgs=[];results=[];names();wipe(g("cl"));g("ciz").hidden=true;g("cis").textContent=""};
+  function shrink(file,q,maxd,type){return new Promise(function(ok,no){
+    var u=URL.createObjectURL(file),im=new Image();
+    im.onload=function(){
+      var k=maxd?Math.min(1,maxd/Math.max(im.width,im.height)):1,c=document.createElement("canvas");
+      c.width=Math.max(1,Math.round(im.width*k));c.height=Math.max(1,Math.round(im.height*k));
+      var x=c.getContext("2d");
+      if(type==="image/jpeg"){x.fillStyle="#fff";x.fillRect(0,0,c.width,c.height)}
+      x.drawImage(im,0,0,c.width,c.height);URL.revokeObjectURL(u);
+      c.toBlob(function(b){b?ok(b):no(new Error("blob"))},type,q);
+    };
+    im.onerror=function(){URL.revokeObjectURL(u);no(new Error("img"))};
+    im.src=u;
+  })}
+  g("cib").onclick=async function(){
+    var btn=this,st=g("cis"),ul=g("cl");
+    if(!imgs.length){st.textContent="Choose at least one image first.";return}
+    var q=+g("ciq").value/100,maxd=+g("cim").value,type=g("cit").value;
+    wipe(ul);results=[];g("ciz").hidden=true;btn.disabled=true;
+    var fail=0;
+    for(var i=0;i<imgs.length;i++){
+      st.textContent="Compressing "+(i+1)+" of "+imgs.length+"...";
+      try{
+        var b=await shrink(imgs[i],q,maxd,type),out=baseName(imgs[i].name)+"-compressed"+(EXT[b.type]||".jpg");
+        addRes(ul,imgs[i].name,imgs[i].size,b,out);
+        if(b.size<imgs[i].size)results.push({name:out,blob:b});
+      }catch(e){console.error(e);fail++}
+    }
+    st.textContent=fail?"Done. "+fail+" file(s) could not be read.":"Done.";
+    g("ciz").hidden=results.length<2;
+    btn.disabled=false;
+  };
+  g("ciz").onclick=async function(){
+    var st=g("cis");
+    try{
+      await load(U.zip);
+      var z=new JSZip(),used={};
+      results.forEach(function(r){var n=r.name;if(used[n]){var d=n.lastIndexOf(".");n=n.slice(0,d)+"-"+used[n]+n.slice(d)}used[r.name]=(used[r.name]||0)+1;z.file(n,r.blob)});
+      var blob=await z.generateAsync({type:"blob"}),a=document.createElement("a");
+      a.href=URL.createObjectURL(blob);a.download="compressed-images.zip";document.body.appendChild(a);a.click();a.remove();
+      setTimeout(function(){URL.revokeObjectURL(a.href)},1000);
+    }catch(e){console.error(e);st.textContent="Could not create the zip file. Please download the images one by one."}
+  };
+})();
+</script>
 <script>
 (function(){
   var hero=document.getElementById("hero"),typ=document.getElementById("start"),tr=document.getElementById("tr"),pdf=document.getElementById("pdfc"),vo=document.getElementById("voicec");
   var src=document.getElementById("trsrc"),out=document.getElementById("trout"),st=document.getElementById("trstatus"),cc=document.getElementById("tcc"),cw=document.getElementById("tcw"),cs=document.getElementById("tcs");
   var title0=document.title,seq=0,tm;
   function route(v){
-    var h=typeof v==="string"?v:location.hash,t=h==="#translation",p=h==="#pdf-converter",v2=h==="#voice-to-text",o=t||p||v2;
-    hero.hidden=o;typ.hidden=o;tr.hidden=!t;pdf.hidden=!p;vo.hidden=!v2;
-    [["m-typing",!o],["m-tr",t],["m-pdf",p],["m-voice",v2]].forEach(function(x){document.getElementById(x[0]).setAttribute("aria-current",x[1]?"page":"false")});
-    document.title=t?"Roman Urdu to English Translator | TypeNow":p?"PDF Converter - Word to PDF, Image to PDF | TypeNow":v2?"Voice to Text - Free Speech to Text | TypeNow":title0;
+    var h=typeof v==="string"?v:location.hash,t=h==="#translation",p=h==="#pdf-converter",v2=h==="#voice-to-text",c=h==="#compress",o=t||p||v2||c;
+    hero.hidden=o;typ.hidden=o;tr.hidden=!t;pdf.hidden=!p;vo.hidden=!v2;document.getElementById("compc").hidden=!c;
+    [["m-typing",!o],["m-tr",t],["m-pdf",p],["m-voice",v2],["m-comp",c]].forEach(function(x){document.getElementById(x[0]).setAttribute("aria-current",x[1]?"page":"false")});
+    document.title=t?"Roman Urdu to English Translator | TypeNow":p?"PDF Converter - Word to PDF, Image to PDF | TypeNow":v2?"Voice to Text - Free Speech to Text | TypeNow":c?"Compress PDF & Image - Reduce File Size Online | TypeNow":title0;
     if(o)window.scrollTo(0,0);
     if(t)setTimeout(function(){src.focus()},50);
   }
   window.addEventListener("hashchange",route);route();
-  ["m-typing","m-tr","m-pdf","m-voice"].forEach(function(id){
+  ["m-typing","m-tr","m-pdf","m-voice","m-comp"].forEach(function(id){
     var a=document.getElementById(id);
     a.addEventListener("click",function(e){
       e.preventDefault();
@@ -562,8 +752,8 @@ document.addEventListener("keydown",e=>{
 });
 box.addEventListener("click",()=>{if(!done)inp.focus()});
 $("again").addEventListener("click",reset);
-document.querySelectorAll(".modes button").forEach(b=>b.addEventListener("click",()=>{
-  document.querySelectorAll(".modes button").forEach(x=>x.setAttribute("aria-pressed","false"));
+document.querySelectorAll(".bar .modes button").forEach(b=>b.addEventListener("click",()=>{
+  document.querySelectorAll(".bar .modes button").forEach(x=>x.setAttribute("aria-pressed","false"));
   b.setAttribute("aria-pressed","true");dur=+b.dataset.t;reset();
 }));
 reset();
