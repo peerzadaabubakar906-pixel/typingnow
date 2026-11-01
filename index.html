@@ -228,6 +228,39 @@ textarea.qin{resize:vertical;min-height:96px}
 #cvtxt{min-height:240px;font-size:1.08rem;line-height:1.6;border-radius:16px;padding:18px;white-space:pre-wrap}
 #cvst{text-align:center;color:var(--dim);margin:14px 0 0;min-height:1.4em}
 @media (prefers-reduced-motion:reduce){.acard,.abig{animation:none}}
+/* ---- responsive / mobile fixes ---- */
+.menu{flex-wrap:nowrap}
+.trbar .pbtn{background:var(--acc);border-color:var(--acc);color:#fff;font-weight:700}
+.ctabs button{flex:1 1 auto}
+@media (max-width:820px){.qprev{position:static}}
+@media (max-width:760px){
+  .topbar{position:static;-webkit-backdrop-filter:none;backdrop-filter:none}
+  .topbar .nav{padding:10px 12px 8px;gap:8px}
+  .logo{font-size:1.15rem}.logo svg{width:32px;height:32px}
+  .menu{width:100%;justify-content:flex-start;margin-left:0;-webkit-overflow-scrolling:touch;scroll-snap-type:x proximity}
+  .menu a{padding:9px 13px;font-size:.93rem;scroll-snap-align:center}
+  main{padding:0 14px 40px}
+  main:not(#start){padding-top:16px}
+  .hero{width:calc(100% - 28px);margin-bottom:26px}
+  .cap{max-width:88%}
+  h1{font-size:clamp(1.55rem,7vw,2rem)}
+  p.sub{font-size:1rem;margin-bottom:18px}
+  .ctabs button{padding:9px 12px;font-size:.93rem}
+  .qempty{min-height:170px}
+  .acard b{font-size:1.6rem}
+  .foot-in{padding:30px 16px 20px}
+  .foot-bar{padding-left:16px;padding-right:16px}
+}
+@media (max-width:600px){.arr{display:none}.dots{bottom:12px}}
+@media (max-width:420px){
+  .stats{gap:14px;font-size:.95rem}.stats b{font-size:1.35rem}
+  .box{padding:18px 14px}
+  .tract button,.tract a.pbtn{padding:12px 20px}
+  .pills button{padding:9px 14px}
+  .trstats{gap:8px 18px}
+}
+@media (pointer:coarse),(hover:none){.hint{display:none}}
+@media (hover:none){.menu a:hover,.foot-col a:hover,#totop:hover,#casec .pills button:hover{transform:none}.menu a:hover svg{transform:none}}
 </style>
 </head>
 <body>
@@ -694,7 +727,7 @@ textarea.qin{resize:vertical;min-height:96px}
         <label for="qpn">Phone number</label><input id="qpn" type="tel" class="qin" placeholder="+92 300 1234567" autocomplete="off">
       </div>
       <div class="qopts">
-        <div><label for="qsz">Size</label><select id="qsz" class="qin"><option value="256">Small (256 px)</option><option value="512" selected>Medium (512 px)</option><option value="1024">Large (1024 px)</option></select></div>
+        <div><label for="qsz">Size</label><select id="qsz" class="qin"><option value="256">256 px</option><option value="512" selected>512 px</option><option value="1024">1024 px</option></select></div>
         <div><label for="qec">Error correction</label><select id="qec" class="qin"><option value="L">Low</option><option value="M" selected>Medium</option><option value="Q">Quartile</option><option value="H">High</option></select></div>
         <div><label for="qfg">Code colour</label><input type="color" id="qfg" class="qin" value="#000000"></div>
         <div><label for="qbg">Background</label><input type="color" id="qbg" class="qin" value="#ffffff"></div>
@@ -1309,6 +1342,16 @@ window.__ready=true;
   var up=function(){window.scrollTo({top:0,behavior:"smooth"})};
   document.getElementById("totop").addEventListener("click",up);
   document.querySelectorAll("[data-up]").forEach(function(a){a.addEventListener("click",function(){setTimeout(up,60)})});
+})();
+</script>
+<script>
+(function(){
+  var h=document.getElementById("hero"),x0=null;
+  h.addEventListener("touchstart",function(e){x0=e.touches[0].clientX},{passive:true});
+  h.addEventListener("touchend",function(e){
+    if(x0===null)return;var dx=e.changedTouches[0].clientX-x0;x0=null;
+    if(Math.abs(dx)>40)document.querySelector(dx<0?".next":".prev").click();
+  },{passive:true});
 })();
 </script>
 </body>
